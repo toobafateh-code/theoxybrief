@@ -1,6 +1,26 @@
+import Image from "next/image";
 export default function Home() {
   return (
     <main className="min-h-screen bg-[#F7F4ED] text-[#10251E]">
+      <header className="px-6 py-6 md:px-16">
+  <div className="mx-auto max-w-7xl flex items-center justify-between">
+    <Image
+      src="/oxy-logo.png"
+      alt="The OXY Brief Logo"
+      width={220}
+      height={80}
+      className="h-auto w-40 md:w-56"
+      priority
+    />
+
+    <a
+      href="#contact"
+      className="rounded-full border border-[#10251E]/20 bg-white px-6 py-3 text-sm font-semibold hover:bg-[#EFEADF]"
+    >
+      Collaborate
+    </a>
+  </div>
+</header>
       {/* HERO */}
       <section className="px-6 py-20 md:px-16 md:py-28">
         <div className="mx-auto grid max-w-7xl items-center gap-16 md:grid-cols-2">

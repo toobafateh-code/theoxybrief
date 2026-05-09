@@ -5,22 +5,41 @@ export default function Home() {
     <main className="min-h-screen bg-[#F7F4ED] text-[#10251E]">
       {/* HEADER */}
       <header className="px-6 pt-6 md:px-16 md:pt-8">
-        <div className="mx-auto flex max-w-7xl items-center">
-          <Image
-            src="/oxy-logo.png"
-            alt="The OXY Brief"
-            width={180}
-            height={70}
-            className="h-auto w-36 md:w-48"
-            priority
-          />
+        <div className="mx-auto flex max-w-7xl flex-col items-center gap-8">
+          <a href="/">
+            <Image
+              src="/oxy-logo.png"
+              alt="The OXY Brief"
+              width={180}
+              height={70}
+              className="h-auto w-32 md:w-40"
+              priority
+            />
+          </a>
+
+          <nav className="flex flex-wrap items-center justify-center gap-8 text-lg font-bold text-[#10251E] md:gap-12 md:text-xl">
+            <a href="#about" className="hover:text-[#3D6B4F]">
+              About
+            </a>
+            <a href="#work-model" className="hover:text-[#3D6B4F]">
+              Our Work Model
+            </a>
+            <a href="#services" className="hover:text-[#3D6B4F]">
+              Services
+            </a>
+            <a href="#insights" className="hover:text-[#3D6B4F]">
+              Insights
+            </a>
+            <a href="#contact" className="hover:text-[#3D6B4F]">
+              Contact
+            </a>
+          </nav>
         </div>
       </header>
 
       {/* HERO */}
       <section className="px-6 pt-8 pb-20 md:px-16 md:pt-10 md:pb-28">
         <div className="mx-auto grid max-w-7xl items-center gap-16 md:grid-cols-2">
-          {/* LEFT SIDE */}
           <div>
             <p className="mb-6 text-sm font-bold uppercase tracking-[0.35em] text-[#3D6B4F]">
               Observe → Translate → Yield
@@ -57,7 +76,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* RIGHT SIDE IMAGE */}
           <div className="flex flex-col items-center">
             <img
               src="/tooba.png"
@@ -73,12 +91,13 @@ export default function Home() {
       </section>
 
       {/* ABOUT */}
-      <section className="px-6 py-16 md:px-16">
+      <section id="about" className="px-6 py-20 md:px-16">
         <div className="mx-auto grid max-w-7xl gap-10 md:grid-cols-2">
           <div>
             <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#3D6B4F]">
               About
             </p>
+
             <h2 className="mt-4 text-4xl font-bold leading-tight md:text-5xl">
               ESG should not stop at reports.
             </h2>
@@ -101,45 +120,50 @@ export default function Home() {
       </section>
 
       {/* OXY MODEL */}
-      <section id="oxy-model" className="px-6 py-20 md:px-16">
-        <div className="mx-auto max-w-7xl">
-          <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#3D6B4F]">
+      <section id="oxy-model" className="px-6 py-24 md:px-16">
+        <div className="mx-auto max-w-7xl text-center">
+          <p className="text-lg font-bold uppercase tracking-[0.35em] text-[#3D6B4F]">
             The OXY Model
           </p>
 
-          <h2 className="mt-4 max-w-4xl text-4xl font-bold leading-tight md:text-5xl">
+          <h2 className="mx-auto mt-5 max-w-5xl text-5xl font-black leading-tight md:text-7xl">
             Observe. Translate. Yield.
           </h2>
 
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
-            <div className="rounded-[2rem] bg-white p-8 shadow-sm">
-              <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-[#E4EDDF] text-2xl font-bold text-[#2F6B3F]">
+          <p className="mx-auto mt-6 max-w-4xl text-xl leading-9 text-[#53645D]">
+            A clear framework for converting sustainability from abstract
+            reporting into practical business performance.
+          </p>
+
+          <div className="mt-16 grid gap-6 md:grid-cols-3">
+            <div className="rounded-[2rem] bg-white p-10 text-center shadow-sm">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#E4EDDF] text-3xl font-bold text-[#2F6B3F]">
                 O
               </div>
-              <h3 className="text-3xl font-bold">Observe</h3>
-              <p className="mt-5 leading-8 text-[#53645D]">
+              <h3 className="text-4xl font-bold">Observe</h3>
+              <p className="mt-6 text-lg leading-8 text-[#53645D]">
                 Identify inefficiencies, emissions, operational waste, resource
                 pressure, and sustainability gaps that others overlook.
               </p>
             </div>
 
-            <div className="rounded-[2rem] bg-white p-8 shadow-sm">
-              <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-[#E4EDDF] text-2xl font-bold text-[#2F6B3F]">
+            <div className="rounded-[2rem] bg-white p-10 text-center shadow-sm">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#E4EDDF] text-3xl font-bold text-[#2F6B3F]">
                 X
               </div>
-              <h3 className="text-3xl font-bold">Translate</h3>
-              <p className="mt-5 leading-8 text-[#53645D]">
-                Convert ESG into business language: cost, margin, capital, risk,
-                valuation, procurement, and operational efficiency.
+              <h3 className="text-4xl font-bold">Translate</h3>
+              <p className="mt-6 text-lg leading-8 text-[#53645D]">
+                Convert ESG into business language: cost, margin, capital,
+                risk, valuation, procurement, and operational efficiency.
               </p>
             </div>
 
-            <div className="rounded-[2rem] bg-white p-8 shadow-sm">
-              <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-[#E4EDDF] text-2xl font-bold text-[#2F6B3F]">
+            <div className="rounded-[2rem] bg-white p-10 text-center shadow-sm">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#E4EDDF] text-3xl font-bold text-[#2F6B3F]">
                 Y
               </div>
-              <h3 className="text-3xl font-bold">Yield</h3>
-              <p className="mt-5 leading-8 text-[#53645D]">
+              <h3 className="text-4xl font-bold">Yield</h3>
+              <p className="mt-6 text-lg leading-8 text-[#53645D]">
                 Generate measurable outcomes: lower costs, stronger resilience,
                 better decisions, and sustainability that performs.
               </p>
@@ -149,7 +173,7 @@ export default function Home() {
       </section>
 
       {/* OXY INSIGHT */}
-      <section className="px-6 py-16 md:px-16">
+      <section className="px-6 py-20 md:px-16">
         <div className="mx-auto max-w-7xl rounded-[2rem] bg-[#10251E] p-10 text-white md:p-16">
           <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#B9D2B1]">
             OXY Insight
@@ -166,37 +190,43 @@ export default function Home() {
         </div>
       </section>
 
-      {/* OFFERINGS */}
-      <section className="px-6 py-20 md:px-16">
-        <div className="mx-auto max-w-7xl">
-          <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#3D6B4F]">
-            What We Do
+      {/* OUR WORK MODEL */}
+      <section id="work-model" className="px-6 py-24 md:px-16">
+        <div className="mx-auto max-w-7xl text-center">
+          <p className="text-lg font-bold uppercase tracking-[0.35em] text-[#3D6B4F]">
+            Our Work Model
           </p>
 
-          <h2 className="mt-4 max-w-4xl text-4xl font-bold leading-tight md:text-5xl">
-            A platform for ESG that performs.
+          <h2 className="mx-auto mt-5 max-w-5xl text-5xl font-black leading-tight md:text-7xl">
+            The OXY Brief turns sustainability into business performance.
           </h2>
 
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
-            <div className="rounded-[2rem] border border-[#10251E]/10 bg-white p-8">
-              <h3 className="text-2xl font-bold">The OXY Brief</h3>
-              <p className="mt-5 leading-8 text-[#53645D]">
+          <p className="mx-auto mt-6 max-w-4xl text-xl leading-9 text-[#53645D]">
+            Through insight, storytelling, and advisory work, we translate ESG
+            into measurable value for leaders, organizations, and young
+            changemakers.
+          </p>
+
+          <div className="mt-16 grid gap-6 md:grid-cols-3">
+            <div className="rounded-[2rem] bg-white p-10 text-center shadow-sm">
+              <h3 className="text-4xl font-bold">The OXY Brief</h3>
+              <p className="mt-6 text-lg leading-8 text-[#53645D]">
                 Executive sustainability insights connecting ESG to business
                 performance.
               </p>
             </div>
 
-            <div className="rounded-[2rem] border border-[#10251E]/10 bg-white p-8">
-              <h3 className="text-2xl font-bold">OXY 60</h3>
-              <p className="mt-5 leading-8 text-[#53645D]">
+            <div className="rounded-[2rem] bg-white p-10 text-center shadow-sm">
+              <h3 className="text-4xl font-bold">OXY 60</h3>
+              <p className="mt-6 text-lg leading-8 text-[#53645D]">
                 60-second sustainability intelligence for leaders, youth, and
                 modern audiences.
               </p>
             </div>
 
-            <div className="rounded-[2rem] border border-[#10251E]/10 bg-white p-8">
-              <h3 className="text-2xl font-bold">OXY Explains</h3>
-              <p className="mt-5 leading-8 text-[#53645D]">
+            <div className="rounded-[2rem] bg-white p-10 text-center shadow-sm">
+              <h3 className="text-4xl font-bold">OXY Explains</h3>
+              <p className="mt-6 text-lg leading-8 text-[#53645D]">
                 Visual breakdowns simplifying ESG, decarbonisation, circular
                 economy, and sustainability strategy.
               </p>
@@ -205,25 +235,157 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ARTICLES */}
-      <section className="px-6 py-20 md:px-16">
-        <div className="mx-auto max-w-7xl">
-          <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#3D6B4F]">
+      {/* ADVISORY SERVICES */}
+      <section id="services" className="px-6 py-24 md:px-16">
+        <div className="mx-auto max-w-7xl text-center">
+          <p className="text-lg font-bold uppercase tracking-[0.35em] text-[#3D6B4F]">
+            Services
+          </p>
+
+          <h2 className="mx-auto mt-5 max-w-5xl text-5xl font-black leading-tight md:text-7xl">
+            Sustainability advisory designed for financial outcomes.
+          </h2>
+
+          <p className="mx-auto mt-6 max-w-4xl text-xl leading-9 text-[#53645D]">
+            We help organizations connect sustainability strategy to margin
+            expansion, revenue growth, access to capital, and enterprise value
+            protection.
+          </p>
+
+          <div className="mt-16 grid gap-8 md:grid-cols-2">
+            <div className="rounded-[2rem] bg-white p-10 text-left shadow-sm">
+              <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#3D6B4F]">
+                01
+              </p>
+
+              <h3 className="mt-4 text-4xl font-bold">Cost Efficiency</h3>
+              <p className="mt-2 text-xl text-[#53645D]">Margin Expansion</p>
+
+              <h4 className="mt-8 text-lg font-bold">Services</h4>
+              <ul className="mt-4 space-y-2 text-lg leading-8 text-[#53645D]">
+                <li>• Energy efficiency &amp; decarbonization ROI modeling</li>
+                <li>• Supply chain optimization: waste, logistics, packaging</li>
+                <li>• Resource efficiency: water and materials</li>
+                <li>• Carbon pricing exposure modeling</li>
+                <li>• ESG-driven operational audits</li>
+              </ul>
+
+              <h4 className="mt-8 text-lg font-bold">Outputs</h4>
+              <ul className="mt-4 space-y-2 text-lg leading-8 text-[#53645D]">
+                <li>• Cost savings models</li>
+                <li>• Payback periods</li>
+                <li>• EBITDA uplift projections</li>
+              </ul>
+            </div>
+
+            <div className="rounded-[2rem] bg-white p-10 text-left shadow-sm">
+              <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#3D6B4F]">
+                02
+              </p>
+
+              <h3 className="mt-4 text-4xl font-bold">Revenue Upside</h3>
+              <p className="mt-2 text-xl text-[#53645D]">Top-Line Growth</p>
+
+              <h4 className="mt-8 text-lg font-bold">Services</h4>
+              <ul className="mt-4 space-y-2 text-lg leading-8 text-[#53645D]">
+                <li>• Sustainable product strategy</li>
+                <li>• ESG-led market entry strategy</li>
+                <li>• Customer willingness-to-pay analysis</li>
+                <li>• Green premium pricing strategy</li>
+                <li>• ESG branding &amp; positioning advisory</li>
+              </ul>
+
+              <h4 className="mt-8 text-lg font-bold">Outputs</h4>
+              <ul className="mt-4 space-y-2 text-lg leading-8 text-[#53645D]">
+                <li>• Revenue growth scenarios</li>
+                <li>• Pricing strategy decks</li>
+                <li>• Customer segmentation insights</li>
+              </ul>
+            </div>
+
+            <div className="rounded-[2rem] bg-white p-10 text-left shadow-sm">
+              <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#3D6B4F]">
+                03
+              </p>
+
+              <h3 className="mt-4 text-4xl font-bold">Access to Capital</h3>
+              <p className="mt-2 text-xl text-[#53645D]">
+                Financing Advantage
+              </p>
+
+              <h4 className="mt-8 text-lg font-bold">Services</h4>
+              <ul className="mt-4 space-y-2 text-lg leading-8 text-[#53645D]">
+                <li>• ESG rating improvement strategy</li>
+                <li>• Sustainable finance readiness: green bonds, SL loans</li>
+                <li>• Investor ESG narrative building</li>
+                <li>• ESG due diligence prep for M&amp;A or fundraising</li>
+                <li>• Climate risk disclosures: TCFD/ISSB aligned</li>
+              </ul>
+
+              <h4 className="mt-8 text-lg font-bold">Outputs</h4>
+              <ul className="mt-4 space-y-2 text-lg leading-8 text-[#53645D]">
+                <li>• Cost of capital reduction scenarios</li>
+                <li>• Investor-ready ESG story</li>
+                <li>• Rating uplift roadmap</li>
+              </ul>
+            </div>
+
+            <div className="rounded-[2rem] bg-white p-10 text-left shadow-sm">
+              <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#3D6B4F]">
+                04
+              </p>
+
+              <h3 className="mt-4 text-4xl font-bold">Risk &amp; Valuation</h3>
+              <p className="mt-2 text-xl text-[#53645D]">
+                Enterprise Value Protection
+              </p>
+
+              <h4 className="mt-8 text-lg font-bold">Services</h4>
+              <ul className="mt-4 space-y-2 text-lg leading-8 text-[#53645D]">
+                <li>• Climate risk scenario analysis</li>
+                <li>• Supply chain risk mapping</li>
+                <li>• Regulatory risk tracking</li>
+                <li>• ESG controversy &amp; reputation risk modeling</li>
+                <li>• Double materiality assessments</li>
+              </ul>
+
+              <h4 className="mt-8 text-lg font-bold">Outputs</h4>
+              <ul className="mt-4 space-y-2 text-lg leading-8 text-[#53645D]">
+                <li>• Risk-adjusted valuation models</li>
+                <li>• Scenario analysis dashboards</li>
+                <li>• Board-level risk insights</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* INSIGHTS */}
+      <section id="insights" className="px-6 py-24 md:px-16">
+        <div className="mx-auto max-w-7xl text-center">
+          <p className="text-lg font-bold uppercase tracking-[0.35em] text-[#3D6B4F]">
             Insights
           </p>
 
-          <h2 className="mt-4 text-4xl font-bold md:text-5xl">
+          <h2 className="mx-auto mt-5 max-w-5xl text-5xl font-black leading-tight md:text-7xl">
             Latest OXY Thinking
           </h2>
 
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
+          <p className="mx-auto mt-6 max-w-4xl text-xl leading-9 text-[#53645D]">
+            Practical sustainability intelligence for decisions that affect
+            cost, capital, risk, and growth.
+          </p>
+
+          <div className="mt-16 grid gap-6 text-left md:grid-cols-3">
             <article className="rounded-[2rem] bg-white p-8 shadow-sm">
               <p className="text-sm font-bold uppercase tracking-[0.2em] text-[#3D6B4F]">
                 Aviation
               </p>
+
               <h3 className="mt-4 text-2xl font-bold">
                 Fuel efficiency is not just environmental. It is financial.
               </h3>
+
               <p className="mt-5 leading-7 text-[#53645D]">
                 Applying the OXY Model to aviation decarbonisation and margin
                 protection.
@@ -234,9 +396,11 @@ export default function Home() {
               <p className="text-sm font-bold uppercase tracking-[0.2em] text-[#3D6B4F]">
                 ESG Strategy
               </p>
+
               <h3 className="mt-4 text-2xl font-bold">
                 ESG is not working. Here is why.
               </h3>
+
               <p className="mt-5 leading-7 text-[#53645D]">
                 Reports do not drive decisions. Financial translation does.
               </p>
@@ -246,9 +410,11 @@ export default function Home() {
               <p className="text-sm font-bold uppercase tracking-[0.2em] text-[#3D6B4F]">
                 Procurement
               </p>
+
               <h3 className="mt-4 text-2xl font-bold">
                 Waste is not just environmental loss.
               </h3>
+
               <p className="mt-5 leading-7 text-[#53645D]">
                 It is financial leakage hidden inside operations.
               </p>
@@ -258,7 +424,7 @@ export default function Home() {
       </section>
 
       {/* FOUNDER */}
-      <section className="px-6 py-20 md:px-16">
+      <section className="px-6 py-24 md:px-16">
         <div className="mx-auto grid max-w-7xl items-center gap-10 rounded-[2rem] bg-white p-10 shadow-sm md:grid-cols-2 md:p-16">
           <div>
             <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#3D6B4F]">
@@ -285,6 +451,7 @@ export default function Home() {
             <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#B9D2B1]">
               Positioning
             </p>
+
             <h3 className="mt-4 text-4xl font-bold leading-tight">
               Sustainability is the why. Performance is the how.
             </h3>
@@ -295,15 +462,15 @@ export default function Home() {
       {/* CONTACT */}
       <section id="contact" className="px-6 py-24 md:px-16">
         <div className="mx-auto max-w-5xl text-center">
-          <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#3D6B4F]">
-            Collaborate
+          <p className="text-lg font-bold uppercase tracking-[0.35em] text-[#3D6B4F]">
+            Contact
           </p>
 
-          <h2 className="mt-4 text-4xl font-bold md:text-6xl">
+          <h2 className="mx-auto mt-5 max-w-5xl text-5xl font-black leading-tight md:text-7xl">
             Bring sustainability stories to life.
           </h2>
 
-          <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-[#53645D]">
+          <p className="mx-auto mt-6 max-w-3xl text-xl leading-9 text-[#53645D]">
             For collaborations, OXY 60 On Location, youth sustainability
             initiatives, speaking, ESG storytelling, and strategic partnerships.
           </p>

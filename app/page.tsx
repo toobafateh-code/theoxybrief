@@ -1,35 +1,32 @@
 import Image from "next/image";
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-[#F7F4ED] text-[#10251E]">
-      <header className="px-6 py-6 md:px-16">
-  <div className="mx-auto max-w-7xl flex items-center justify-between">
-    <Image
-      src="/oxy-logo.png"
-      alt="The OXY Brief Logo"
-      width={220}
-      height={80}
-      className="h-auto w-40 md:w-56"
-      priority
-    />
+      {/* HEADER */}
+      <header className="px-6 pt-6 md:px-16 md:pt-8">
+        <div className="mx-auto flex max-w-7xl items-center">
+          <Image
+            src="/oxy-logo.png"
+            alt="The OXY Brief"
+            width={180}
+            height={70}
+            className="h-auto w-36 md:w-48"
+            priority
+          />
+        </div>
+      </header>
 
-    <a
-      href="#contact"
-      className="rounded-full border border-[#10251E]/20 bg-white px-6 py-3 text-sm font-semibold hover:bg-[#EFEADF]"
-    >
-      Collaborate
-    </a>
-  </div>
-</header>
       {/* HERO */}
-      <section className="px-6 py-20 md:px-16 md:py-28">
+      <section className="px-6 pt-8 pb-20 md:px-16 md:pt-10 md:pb-28">
         <div className="mx-auto grid max-w-7xl items-center gap-16 md:grid-cols-2">
+          {/* LEFT SIDE */}
           <div>
             <p className="mb-6 text-sm font-bold uppercase tracking-[0.35em] text-[#3D6B4F]">
               Observe → Translate → Yield
             </p>
 
-            <h1 className="max-w-6xl text-6xl font-black leading-none tracking-tight md:text-8xl">
+            <h1 className="text-6xl font-black leading-none tracking-tight md:text-8xl">
               THE OXY BRIEF
             </h1>
 
@@ -38,8 +35,9 @@ export default function Home() {
             </p>
 
             <p className="mt-6 max-w-4xl text-lg leading-8 text-[#53645D]">
-              A sustainability intelligence platform helping businesses, youth, and leaders
-              understand ESG beyond reports — through cost, risk, capital, margins, and measurable value.
+              A sustainability intelligence platform helping businesses, youth,
+              and leaders understand ESG beyond reports — through cost, risk,
+              capital, margins, and measurable value.
             </p>
 
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
@@ -59,6 +57,7 @@ export default function Home() {
             </div>
           </div>
 
+          {/* RIGHT SIDE IMAGE */}
           <div className="flex flex-col items-center">
             <img
               src="/tooba.png"
@@ -87,14 +86,15 @@ export default function Home() {
 
           <div className="text-lg leading-8 text-[#53645D]">
             <p>
-              The OXY Brief is built on one core belief: sustainability becomes powerful
-              when it connects to business performance.
+              The OXY Brief is built on one core belief: sustainability becomes
+              powerful when it connects to business performance.
             </p>
 
             <p className="mt-5">
-              We translate sustainability into financial, operational, and strategic relevance —
-              helping audiences understand how ESG affects cost, risk, capital, margins,
-              procurement, infrastructure, and long-term resilience.
+              We translate sustainability into financial, operational, and
+              strategic relevance — helping audiences understand how ESG affects
+              cost, risk, capital, margins, procurement, infrastructure, and
+              long-term resilience.
             </p>
           </div>
         </div>
@@ -118,8 +118,8 @@ export default function Home() {
               </div>
               <h3 className="text-3xl font-bold">Observe</h3>
               <p className="mt-5 leading-8 text-[#53645D]">
-                Identify inefficiencies, emissions, operational waste, resource pressure,
-                and sustainability gaps that others overlook.
+                Identify inefficiencies, emissions, operational waste, resource
+                pressure, and sustainability gaps that others overlook.
               </p>
             </div>
 
@@ -156,12 +156,12 @@ export default function Home() {
           </p>
 
           <h2 className="mt-5 max-w-5xl text-4xl font-bold leading-tight md:text-6xl">
-            ESG that does not impact the P&L eventually becomes noise.
+            ESG that does not impact the P&amp;L eventually becomes noise.
           </h2>
 
           <p className="mt-8 max-w-3xl text-lg leading-8 text-white/75">
-            The future of ESG is not more reporting. It is sustainability embedded
-            into operations, strategy, finance, and decision-making.
+            The future of ESG is not more reporting. It is sustainability
+            embedded into operations, strategy, finance, and decision-making.
           </p>
         </div>
       </section>
@@ -181,22 +181,24 @@ export default function Home() {
             <div className="rounded-[2rem] border border-[#10251E]/10 bg-white p-8">
               <h3 className="text-2xl font-bold">The OXY Brief</h3>
               <p className="mt-5 leading-8 text-[#53645D]">
-                Executive sustainability insights connecting ESG to business performance.
+                Executive sustainability insights connecting ESG to business
+                performance.
               </p>
             </div>
 
             <div className="rounded-[2rem] border border-[#10251E]/10 bg-white p-8">
               <h3 className="text-2xl font-bold">OXY 60</h3>
               <p className="mt-5 leading-8 text-[#53645D]">
-                60-second sustainability intelligence for leaders, youth, and modern audiences.
+                60-second sustainability intelligence for leaders, youth, and
+                modern audiences.
               </p>
             </div>
 
             <div className="rounded-[2rem] border border-[#10251E]/10 bg-white p-8">
               <h3 className="text-2xl font-bold">OXY Explains</h3>
               <p className="mt-5 leading-8 text-[#53645D]">
-                Visual breakdowns simplifying ESG, decarbonisation, circular economy,
-                and sustainability strategy.
+                Visual breakdowns simplifying ESG, decarbonisation, circular
+                economy, and sustainability strategy.
               </p>
             </div>
           </div>
@@ -223,7 +225,8 @@ export default function Home() {
                 Fuel efficiency is not just environmental. It is financial.
               </h3>
               <p className="mt-5 leading-7 text-[#53645D]">
-                Applying the OXY Model to aviation decarbonisation and margin protection.
+                Applying the OXY Model to aviation decarbonisation and margin
+                protection.
               </p>
             </article>
 
@@ -267,13 +270,14 @@ export default function Home() {
             </h2>
 
             <p className="mt-6 text-lg leading-8 text-[#53645D]">
-              ESG and Sustainability Advisor, Cambridge University certified Circular Economy
-              specialist, and founder of The OXY Brief.
+              ESG and Sustainability Advisor, Cambridge University certified
+              Circular Economy specialist, and founder of The OXY Brief.
             </p>
 
             <p className="mt-5 text-lg leading-8 text-[#53645D]">
-              Tooba is building The OXY Brief to help businesses and young leaders understand
-              sustainability through performance, finance, systems thinking, and real-world impact.
+              Tooba is building The OXY Brief to help businesses and young
+              leaders understand sustainability through performance, finance,
+              systems thinking, and real-world impact.
             </p>
           </div>
 
@@ -300,8 +304,8 @@ export default function Home() {
           </h2>
 
           <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-[#53645D]">
-            For collaborations, OXY 60 On Location, youth sustainability initiatives,
-            speaking, ESG storytelling, and strategic partnerships.
+            For collaborations, OXY 60 On Location, youth sustainability
+            initiatives, speaking, ESG storytelling, and strategic partnerships.
           </p>
 
           <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">

@@ -190,6 +190,39 @@ export default function Home() {
         </div>
       </section>
 
+{/* PODCAST */}
+<section className="px-6 py-20 md:px-16">
+  <div className="mx-auto max-w-7xl items-center gap-12 md:grid md:grid-cols-2">
+    <div>
+      <p className="text-lg font-bold uppercase tracking-[0.35em] text-[#3D6B4F]">
+        Podcast
+      </p>
+
+      <h2 className="mt-5 text-5xl font-black leading-tight md:text-7xl">
+        Real conversations on sustainability, finance & impact.
+      </h2>
+
+      <p className="mt-6 text-xl leading-9 text-[#53645D]">
+        Hosted by Tooba Fateh, The OXY Brief Podcast features conversations with
+        leaders, experts, and innovators shaping the future of sustainability.
+      </p>
+
+      <p className="mt-6 text-xl leading-9 text-[#53645D]">
+        Topics include ESG, sustainable finance, decarbonisation, climate
+        strategy, circular economy, and business performance.
+      </p>
+    </div>
+
+    <div className="mt-10 md:mt-0">
+      <img
+        src="/oxy-podcast.jpg"
+        alt="The OXY Brief Podcast"
+        className="mx-auto w-full max-w-md rounded-[2rem] shadow-2xl"
+      />
+    </div>
+  </div>
+</section>
+
       {/* OUR WORK MODEL */}
       <section id="work-model" className="px-6 py-24 md:px-16">
         <div className="mx-auto max-w-7xl text-center">
@@ -234,6 +267,32 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+{/* OXY ECOSYSTEM */}
+<section className="px-6 py-20 md:px-16">
+  <div className="mx-auto max-w-7xl text-center">
+    <p className="text-lg font-bold uppercase tracking-[0.35em] text-[#3D6B4F]">
+      The OXY Ecosystem
+    </p>
+
+    <h2 className="mx-auto mt-5 max-w-5xl text-5xl font-black leading-tight md:text-7xl">
+      A unified sustainability intelligence platform.
+    </h2>
+
+    <p className="mx-auto mt-6 max-w-4xl text-xl leading-9 text-[#53645D]">
+      The OXY Brief, OXY 60, OXY Explains, and the OXY Model work together to
+      translate sustainability into measurable business performance.
+    </p>
+
+    <div className="mt-12">
+      <img
+        src="/oxy-ecosystem.jpg"
+        alt="The OXY Ecosystem"
+        className="w-full rounded-[2rem] shadow-2xl"
+      />
+    </div>
+  </div>
+</section>
 
       {/* ADVISORY SERVICES */}
       <section id="services" className="px-6 py-24 md:px-16">

@@ -27,6 +27,9 @@ export default function Home() {
             <a href="#services" className="hover:text-[#3D6B4F]">
               Services
             </a>
+<a href="#knowledge-hub" className="hover:text-[#3D6B4F]">
+  Knowledge Hub
+</a>
             <a href="#insights" className="hover:text-[#3D6B4F]">
               Insights
             </a>
@@ -398,8 +401,8 @@ export default function Home() {
         </div>
       </section>
 
-{/* CONTENT LIBRARY */}
-<section id="content-library" className="px-6 py-24 md:px-16">
+{/* Knowledge Hub */}
+<section id="knowledge-hub" className="px-6 py-24 md:px-16">
   <div className="mx-auto max-w-7xl text-center">
     <p className="text-lg font-bold uppercase tracking-[0.35em] text-[#3D6B4F]">
       Content Library

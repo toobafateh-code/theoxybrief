@@ -405,114 +405,82 @@ export default function Home() {
 <section id="knowledge-hub" className="px-6 py-24 md:px-16">
   <div className="mx-auto max-w-7xl text-center">
     <p className="text-lg font-bold uppercase tracking-[0.35em] text-[#3D6B4F]">
-      Content Library
+      Knowledge Hub
     </p>
 
     <h2 className="mx-auto mt-5 max-w-5xl text-5xl font-black leading-tight md:text-7xl">
       Explore The OXY Brief intelligence hub.
     </h2>
 
-    <p className="mx-auto mt-6 max-w-4xl text-xl leading-9 text-[#53645D]">
-      Articles, 60-second updates, and visual explainers translating ESG,
-      sustainability, finance, and impact into practical business insight.
-    </p>
-
     <div className="mt-16 grid gap-8 md:grid-cols-3">
-      {/* THE OXY BRIEF ARTICLES */}
-      <div className="rounded-[2rem] bg-white p-8 text-left shadow-sm">
-        <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#3D6B4F]">
-          Articles
-        </p>
-
-        <h3 className="mt-4 text-3xl font-bold">
-          The OXY Brief
-        </h3>
-
-        <p className="mt-5 leading-8 text-[#53645D]">
-          Long-form sustainability intelligence connecting ESG to energy,
-          risk, capital, procurement, operations, and financial performance.
-        </p>
-
-        <ul className="mt-6 space-y-3 leading-7 text-[#53645D]">
-          <li>• Beyond ESG: Energy, Risk, and Capital</li>
-          <li>• Brewing Sustainability: When The Straw Was Once Coffee</li>
-          <li>• A Day in the Life of a Sustainability Professional</li>
-          <li>• Driving Impact Through ESG &amp; Sustainability</li>
-        </ul>
-
-        <a
-          href="https://www.linkedin.com/company/the-oxy-brief/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-8 inline-block rounded-full bg-[#10251E] px-6 py-3 font-semibold text-white hover:bg-[#1D3A30]"
+      {[
+        {
+          label: "Articles",
+          title: "The OXY Brief",
+          button: "Read on LinkedIn",
+          items: [
+            "Beyond ESG: Energy, Risk, and Capital",
+            "Brewing Sustainability: When The Straw Was Once Coffee",
+            "A Day in the Life of a Sustainability Professional",
+            "Driving Impact Through ESG & Sustainability",
+          ],
+        },
+        {
+          label: "Videos",
+          title: "OXY 60",
+          button: "Watch on LinkedIn",
+          items: [
+            "ESG should influence cost, margin, and capital",
+            "Converting ESG reports into financial statements",
+            "Sustainability intelligence in one minute",
+          ],
+        },
+        {
+          label: "Carousels",
+          title: "OXY Explains",
+          button: "View on LinkedIn",
+          items: [
+            "ESG is not about disclosures. It is about decisions.",
+            "Decarbonisation explained through business value",
+            "Circular economy simplified",
+          ],
+        },
+      ].map((card) => (
+        <div
+          key={card.title}
+          className="flex min-h-[430px] flex-col rounded-[2rem] bg-white p-8 text-left shadow-sm"
         >
-          Read on LinkedIn
-        </a>
-      </div>
+          <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#3D6B4F]">
+            {card.label}
+          </p>
 
-      {/* OXY 60 VIDEOS */}
-      <div className="rounded-[2rem] bg-white p-8 text-left shadow-sm">
-        <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#3D6B4F]">
-          Videos
-        </p>
+          <h3 className="mt-4 text-3xl font-bold">{card.title}</h3>
 
-        <h3 className="mt-4 text-3xl font-bold">
-          OXY 60
-        </h3>
+          <ul className="mt-6 space-y-3 leading-7 text-[#53645D]">
+            {card.items.map((item) => (
+              <li key={item}>
+                <a
+                  href="https://www.linkedin.com/company/the-oxy-brief/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-[#3D6B4F] hover:underline"
+                >
+                  • {item}
+                </a>
+              </li>
+            ))}
+          </ul>
 
-        <p className="mt-5 leading-8 text-[#53645D]">
-          60-second sustainability updates designed to make ESG, finance,
-          decarbonisation, and business impact easier to understand.
-        </p>
-
-        <ul className="mt-6 space-y-3 leading-7 text-[#53645D]">
-          <li>• ESG should influence cost, margin, and capital</li>
-          <li>• Converting ESG reports into financial statements</li>
-          <li>• Sustainability intelligence in one minute</li>
-          <li>• News, trends, and impact explained clearly</li>
-        </ul>
-
-        <a
-          href="https://www.linkedin.com/company/the-oxy-brief/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-8 inline-block rounded-full bg-[#10251E] px-6 py-3 font-semibold text-white hover:bg-[#1D3A30]"
-        >
-          Watch on LinkedIn
-        </a>
-      </div>
-
-      {/* OXY EXPLAINS */}
-      <div className="rounded-[2rem] bg-white p-8 text-left shadow-sm">
-        <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#3D6B4F]">
-          Carousels
-        </p>
-
-        <h3 className="mt-4 text-3xl font-bold">
-          OXY Explains
-        </h3>
-
-        <p className="mt-5 leading-8 text-[#53645D]">
-          Visual explainers breaking down complex sustainability and ESG ideas
-          into simple, actionable insights for decision-makers.
-        </p>
-
-        <ul className="mt-6 space-y-3 leading-7 text-[#53645D]">
-          <li>• ESG is not about disclosures. It is about decisions.</li>
-          <li>• Decarbonisation explained through business value</li>
-          <li>• Circular economy simplified</li>
-          <li>• Sustainability strategy made practical</li>
-        </ul>
-
-        <a
-          href="https://www.linkedin.com/company/the-oxy-brief/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-8 inline-block rounded-full bg-[#10251E] px-6 py-3 font-semibold text-white hover:bg-[#1D3A30]"
-        >
-          View on LinkedIn
-        </a>
-      </div>
+          <a
+            href="https://www.linkedin.com/company/the-oxy-brief/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-auto inline-block rounded-full bg-[#10251E] px-6 py-3 text-center font-semibold text-white hover:bg-[#1D3A30]"
+          >
+            {card.button}
+          </a>
+        </div>
+      ))}
     </div>
   </div>
 </section>

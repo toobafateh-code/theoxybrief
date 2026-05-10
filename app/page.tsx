@@ -48,7 +48,7 @@ export default function Home() {
               Observe → Translate → Yield
             </p>
 
-            <h1 className="text-6xl font-black leading-none tracking-tight md:text-8xl">
+            <h1 className="text-5xl font-black leading-none tracking-tight md:text-7xl">
               THE OXY BRIEF
             </h1>
 

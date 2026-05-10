@@ -462,40 +462,52 @@ export default function Home() {
       </section>
 
       {/* FOUNDER */}
-      <section className="px-6 py-24 md:px-16">
-        <div className="mx-auto grid max-w-7xl items-center gap-10 rounded-[2rem] bg-white p-10 shadow-sm md:grid-cols-2 md:p-16">
-          <div>
-            <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#3D6B4F]">
-              Founder
-            </p>
+      {/* FOUNDER */}
+<section className="px-6 py-20 md:px-16">
+  <div className="mx-auto grid max-w-7xl items-center gap-10 rounded-[2rem] bg-white p-10 shadow-sm md:grid-cols-2 md:p-16">
+    {/* LEFT SIDE */}
+    <div>
+      <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#3D6B4F]">
+        Founder
+      </p>
 
-            <h2 className="mt-4 text-4xl font-bold md:text-5xl">
-              Tooba Fateh
-            </h2>
+      <h2 className="mt-4 text-4xl font-bold md:text-5xl">
+        Tooba Fateh
+      </h2>
 
-            <p className="mt-6 text-lg leading-8 text-[#53645D]">
-              ESG and Sustainability Advisor, Cambridge University certified
-              Circular Economy specialist, and founder of The OXY Brief.
-            </p>
+      <p className="mt-6 text-lg leading-8 text-[#53645D]">
+        ESG and Sustainability Advisor, Cambridge University certified Circular
+        Economy specialist, and founder of The OXY Brief.
+      </p>
 
-            <p className="mt-5 text-lg leading-8 text-[#53645D]">
-              Tooba is building The OXY Brief to help businesses and young
-              leaders understand sustainability through performance, finance,
-              systems thinking, and real-world impact.
-            </p>
-          </div>
+      <p className="mt-5 text-lg leading-8 text-[#53645D]">
+        Tooba is building The OXY Brief to help businesses and young leaders
+        understand sustainability through performance, finance, systems
+        thinking, and real-world impact.
+      </p>
 
-          <div className="rounded-[2rem] bg-[#10251E] p-10 text-white">
-            <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#B9D2B1]">
-              Positioning
-            </p>
+      {/* POSITIONING BOX */}
+      <div className="mt-8 rounded-[2rem] bg-[#10251E] p-8 text-white">
+        <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#B9D2B1]">
+          Positioning
+        </p>
 
-            <h3 className="mt-4 text-4xl font-bold leading-tight">
-              Sustainability is the why. Performance is the how.
-            </h3>
-          </div>
-        </div>
-      </section>
+        <h3 className="mt-4 text-3xl font-bold leading-tight md:text-4xl">
+          Sustainability is the why. Performance is the how.
+        </h3>
+      </div>
+    </div>
+
+    {/* RIGHT SIDE IMAGE */}
+    <div className="flex justify-center">
+      <img
+        src="/founder.jpg"
+        alt="Tooba Fateh"
+        className="w-full max-w-md rounded-[2rem] object-cover shadow-2xl"
+      />
+    </div>
+  </div>
+</section>
 
  {/* CONTACT */}
 <section id="contact" className="px-6 py-24 md:px-16">

@@ -483,12 +483,15 @@ export default function Home() {
               Email The OXY Brief
             </a>
 
-            <a
-              href="https://www.linkedin.com"
-              className="rounded-full border border-[#10251E]/20 bg-white px-8 py-4 font-semibold hover:bg-[#EFEADF]"
-            >
-              LinkedIn
-            </a>
+            <a    
+  href="https://www.linkedin.com/company/the-oxy-brief/"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="rounded-full border border-[#10251E]/20 bg-white px-8 py-4 font-semibold hover:bg-[#EFEADF]"
+>
+  LinkedIn
+</a>
+ 
           </div>
         </div>
       </section>

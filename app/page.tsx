@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[#F7F4ED] text-[#10251E]">
+    <main className="min-h-screen bg-[#ECFDF5] text-[#10251E]">
       {/* HEADER */}
       <header className="px-6 pt-6 md:px-16 md:pt-8">
         <div className="mx-auto flex max-w-7xl flex-col items-center gap-8">
@@ -677,7 +677,7 @@ export default function Home() {
           name="name"
           required
           placeholder="Your name"
-          className="mt-3 w-full rounded-2xl border border-[#10251E]/15 bg-[#F7F4ED] px-5 py-4 outline-none focus:border-[#3D6B4F]"
+          className="mt-3 w-full rounded-2xl border border-[#10251E]/15 bg-[#ECFDF5] px-5 py-4 outline-none focus:border-[#3D6B4F]"
         />
 
         <label className="mt-6 block text-sm font-bold uppercase tracking-[0.25em] text-[#3D6B4F]">
@@ -688,7 +688,7 @@ export default function Home() {
           name="email"
           required
           placeholder="Your email"
-          className="mt-3 w-full rounded-2xl border border-[#10251E]/15 bg-[#F7F4ED] px-5 py-4 outline-none focus:border-[#3D6B4F]"
+          className="mt-3 w-full rounded-2xl border border-[#10251E]/15 bg-[#ECFDF5] px-5 py-4 outline-none focus:border-[#3D6B4F]"
         />
 
         <label className="mt-6 block text-sm font-bold uppercase tracking-[0.25em] text-[#3D6B4F]">
@@ -699,7 +699,7 @@ export default function Home() {
           required
           rows={6}
           placeholder="Tell us how we can help"
-          className="mt-3 w-full rounded-2xl border border-[#10251E]/15 bg-[#F7F4ED] px-5 py-4 outline-none focus:border-[#3D6B4F]"
+          className="mt-3 w-full rounded-2xl border border-[#10251E]/15 bg-[#ECFDF5] px-5 py-4 outline-none focus:border-[#3D6B4F]"
         />
 
         <button

@@ -18,23 +18,29 @@ export default function Home() {
           </a>
 
           <nav className="flex flex-wrap items-center justify-center gap-8 text-lg font-bold text-[#10251E] md:gap-12 md:text-xl">
-            <a href="#about" className="hover:text-[#3D6B4F]">
-              About
-            </a>
-            <a href="#work-model" className="hover:text-[#3D6B4F]">
-              Our Work Model
-            </a>
-            <a href="#services" className="hover:text-[#3D6B4F]">
-              Services
-            </a>
-<a href="#knowledge-hub" className="hover:text-[#3D6B4F]">
+            <a href="/about" className="hover:text-[#3D6B4F]">
+  About
+</a>
+
+<a href="/work-model" className="hover:text-[#3D6B4F]">
+  Our Work Model
+</a>
+
+<a href="/services" className="hover:text-[#3D6B4F]">
+  Services
+</a>
+
+<a href="/knowledge-hub" className="hover:text-[#3D6B4F]">
   Knowledge Hub
 </a>
-            <a href="#insights" className="hover:text-[#3D6B4F]">
-              Insights
-            </a>
-            <a href="#contact" className="hover:text-[#3D6B4F]">
-              Contact
+
+<a href="/insights" className="hover:text-[#3D6B4F]">
+  Insights
+</a>
+
+<a href="/contact" className="hover:text-[#3D6B4F]">
+  Contact Us
+</a>
             </a>
           </nav>
         </div>

@@ -490,7 +490,7 @@ export default function Home() {
               href="mailto:info@theoxybrief.com"
               className="hover:text-[#3D6B4F]"
             >
-              @theoxybrief.com
+              info@theoxybrief.com
             </a>
           </p>
 

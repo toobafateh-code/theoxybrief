@@ -223,53 +223,8 @@ export default function Home() {
   </div>
 </section>
 
-      {/* OUR WORK MODEL */}
-      <section id="work-model" className="px-6 py-24 md:px-16">
-        <div className="mx-auto max-w-7xl text-center">
-          <p className="text-lg font-bold uppercase tracking-[0.35em] text-[#3D6B4F]">
-            Our Work Model
-          </p>
-
-          <h2 className="mx-auto mt-5 max-w-5xl text-5xl font-black leading-tight md:text-7xl">
-            The OXY Brief turns sustainability into business performance.
-          </h2>
-
-          <p className="mx-auto mt-6 max-w-4xl text-xl leading-9 text-[#53645D]">
-            Through insight, storytelling, and advisory work, we translate ESG
-            into measurable value for leaders, organizations, and young
-            changemakers.
-          </p>
-
-          <div className="mt-16 grid gap-6 md:grid-cols-3">
-            <div className="rounded-[2rem] bg-white p-10 text-center shadow-sm">
-              <h3 className="text-4xl font-bold">The OXY Brief</h3>
-              <p className="mt-6 text-lg leading-8 text-[#53645D]">
-                Executive sustainability insights connecting ESG to business
-                performance.
-              </p>
-            </div>
-
-            <div className="rounded-[2rem] bg-white p-10 text-center shadow-sm">
-              <h3 className="text-4xl font-bold">OXY 60</h3>
-              <p className="mt-6 text-lg leading-8 text-[#53645D]">
-                60-second sustainability intelligence for leaders, youth, and
-                modern audiences.
-              </p>
-            </div>
-
-            <div className="rounded-[2rem] bg-white p-10 text-center shadow-sm">
-              <h3 className="text-4xl font-bold">OXY Explains</h3>
-              <p className="mt-6 text-lg leading-8 text-[#53645D]">
-                Visual breakdowns simplifying ESG, decarbonisation, circular
-                economy, and sustainability strategy.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
 {/* OXY ECOSYSTEM */}
-<section className="px-6 py-20 md:px-16">
+<section id="work-model" className="px-6 py-24 md:px-16">
   <div className="mx-auto max-w-7xl text-center">
     <p className="text-lg font-bold uppercase tracking-[0.35em] text-[#3D6B4F]">
       The OXY Ecosystem
@@ -284,7 +239,31 @@ export default function Home() {
       translate sustainability into measurable business performance.
     </p>
 
-    <div className="mt-12">
+    <div className="mt-16 grid gap-6 md:grid-cols-3">
+      <div className="rounded-[2rem] bg-white p-10 text-center shadow-sm">
+        <h3 className="text-4xl font-bold">The OXY Brief</h3>
+        <p className="mt-6 text-lg leading-8 text-[#53645D]">
+          Executive sustainability insights connecting ESG to business performance.
+        </p>
+      </div>
+
+      <div className="rounded-[2rem] bg-white p-10 text-center shadow-sm">
+        <h3 className="text-4xl font-bold">OXY 60</h3>
+        <p className="mt-6 text-lg leading-8 text-[#53645D]">
+          60-second sustainability intelligence for leaders, youth, and modern audiences.
+        </p>
+      </div>
+
+      <div className="rounded-[2rem] bg-white p-10 text-center shadow-sm">
+        <h3 className="text-4xl font-bold">OXY Explains</h3>
+        <p className="mt-6 text-lg leading-8 text-[#53645D]">
+          Visual breakdowns simplifying ESG, decarbonisation, circular economy,
+          and sustainability strategy.
+        </p>
+      </div>
+    </div>
+
+    <div className="mt-14">
       <img
         src="/oxy-ecosystem.jpg"
         alt="The OXY Ecosystem"
@@ -293,7 +272,7 @@ export default function Home() {
     </div>
   </div>
 </section>
-
+      
       {/* ADVISORY SERVICES */}
       <section id="services" className="px-6 py-24 md:px-16">
         <div className="mx-auto max-w-7xl text-center">

@@ -487,10 +487,10 @@ export default function Home() {
           <p>
             <span className="font-bold text-[#10251E]">Email:</span>{" "}
             <a
-              href="mailto:tooba@theoxybrief.com"
+              href="mailto:info@theoxybrief.com"
               className="hover:text-[#3D6B4F]"
             >
-              tooba@theoxybrief.com
+              @theoxybrief.com
             </a>
           </p>
 
@@ -510,7 +510,7 @@ export default function Home() {
               href="https://www.linkedin.com/company/the-oxy-brief/"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-[#3D6B4F]"
+              className="text-blue-600 underline hover:text-[#3D6B4F]"
             >
               The OXY Brief
             </a>

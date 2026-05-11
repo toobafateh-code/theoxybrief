@@ -238,11 +238,11 @@ export default function Home() {
     </p>
 
     <h2 className="mt-5 text-4xl font-bold leading-tight md:text-6xl">
-      Bring sustainability stories to life.
+      Let’s build something meaningful together.
     </h2>
 
     <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-white/75">
-      For advisory inquiries, collaborations, speaking, ESG storytelling, and strategic partnerships.
+      Advisory, partnerships, speaking engagements, and strategic collaborations.
     </p>
 
     <a

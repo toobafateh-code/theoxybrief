@@ -240,12 +240,3 @@ export default function Home() {
     </main>
   );
 }
-```
-
-## Publish to Live Site
-
-```bash
-git add .
-git commit -m "Convert homepage to overview with dedicated page links"
-git push
-```

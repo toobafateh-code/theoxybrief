@@ -199,7 +199,7 @@ export default function Home() {
               {
                 title: "Our Work Model",
                 description:
-                  "See how the OXY Model translates sustainability into performance.",
+                  "See how The OXY Model translates sustainability into performance.",
                 href: "/work-model",
               },
               {

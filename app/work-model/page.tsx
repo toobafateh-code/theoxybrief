@@ -11,7 +11,7 @@ export default function WorkModelPage() {
         </h1>
 
         <p className="mx-auto mt-6 max-w-4xl text-xl leading-9 text-[#53645D]">
-          The OXY Brief, OXY 60, OXY Explains, and the OXY Model work together
+          The OXY Brief, OXY 60, OXY Explains, and The OXY Model work together
           to translate sustainability into measurable business performance.
         </p>
 

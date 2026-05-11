@@ -26,7 +26,7 @@ export default function InsightsPage() {
             </h2>
 
             <p className="mt-5 leading-7 text-[#53645D]">
-              Applying the OXY Model to aviation decarbonisation and margin
+              Applying The OXY Model to aviation decarbonisation and margin
               protection.
             </p>
           </article>

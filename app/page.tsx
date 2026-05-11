@@ -61,7 +61,7 @@ export default function Home() {
       </header>
 
       {/* HERO */}
-      <section className="px-6 pb-20 pt-8 md:px-16 md:pb-28 md:pt-10">
+      <section className="px-6 pb-20 pt-16 md:px-16 md:pb-28 md:pt-20">
         <div className="mx-auto grid max-w-7xl items-center gap-16 md:grid-cols-2">
           <div>
             <p className="mb-6 text-sm font-bold uppercase tracking-[0.35em] text-[#3D6B4F]">
@@ -229,6 +229,30 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+{/* CONTACT CTA */}
+<section className="px-6 py-20 md:px-16">
+  <div className="mx-auto max-w-5xl rounded-[2rem] bg-[#10251E] p-10 text-center text-white md:p-16">
+    <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#B9D2B1]">
+      Contact Us
+    </p>
+
+    <h2 className="mt-5 text-4xl font-bold leading-tight md:text-6xl">
+      Bring sustainability stories to life.
+    </h2>
+
+    <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-white/75">
+      For advisory inquiries, collaborations, speaking, ESG storytelling, and strategic partnerships.
+    </p>
+
+    <a
+      href="/contact"
+      className="mt-8 inline-block rounded-full bg-white px-8 py-4 font-semibold text-[#10251E] hover:bg-[#ECFDF5]"
+    >
+      Contact Us
+    </a>
+  </div>
+</section>
 
       {/* FOOTER */}
       <footer className="border-t border-[#10251E]/10 px-6 py-8 md:px-16">

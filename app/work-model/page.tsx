@@ -47,9 +47,8 @@ export default function WorkModelPage() {
             <div className="rounded-[2rem] bg-white p-10 text-center shadow-sm">
               <h2 className="text-4xl font-bold">OXY 60</h2>
               <p className="mt-6 text-lg leading-8 text-[#53645D]">
-                60-second sustainability intelligence for leaders, youth, and
-                modern audiences.
-              </p>
+  60-second sustainability intelligence for leaders, youth, and decision-makers.
+</p>
             </div>
 
             <div className="rounded-[2rem] bg-white p-10 text-center shadow-sm">

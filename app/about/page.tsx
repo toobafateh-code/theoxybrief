@@ -39,7 +39,7 @@ export default function AboutPage() {
               Our Belief
             </p>
 
-            <h2 className="mt-5 text-4xl font-bold leading-tight md:text-6xl">
+            <h2 className="mt-5 max-w-4xl text-3xl font-bold leading-tight md:text-5xl">
               Sustainability becomes powerful when it connects to performance.
             </h2>
           </div>

@@ -139,7 +139,7 @@ export default function Home() {
               Podcast
             </p>
 
-            <h2 className="mt-5 text-5xl font-black leading-tight md:text-7xl">
+            <h2 className="mt-5 max-w-4xl text-3xl font-bold leading-tight md:text-5xl">
               Real conversations on sustainability, finance &amp; impact.
             </h2>
 

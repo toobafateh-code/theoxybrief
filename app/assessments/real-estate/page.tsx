@@ -15,6 +15,7 @@ type FormData = {
   tenantDemand: string;
   primaryObjective: string;
   budget: string;
+  timeline: string;
 };
 
 export default function RealEstateAssessmentPage() {
@@ -33,6 +34,7 @@ export default function RealEstateAssessmentPage() {
     tenantDemand: "",
     primaryObjective: "",
     budget: "",
+    timeline: "",
   });
 
   function updateField(key: keyof FormData, value: string) {
@@ -341,16 +343,16 @@ export default function RealEstateAssessmentPage() {
             />
 
             <SelectField
-              label="10. How soon do you want to begin?"
-              value={form.budget}
-              onChange={(value) => updateField("budget", value)}
-              options={[
-                "Immediately",
-                "Within 3 Months",
-                "Within 6 Months",
-                "Exploring Options",
-              ]}
-            />
+  label="10. How soon do you want to begin?"
+  value={form.timeline}
+  onChange={(value) => updateField("timeline", value)}
+  options={[
+    "Immediately",
+    "Within 3 Months",
+    "Within 6 Months",
+    "Exploring Options",
+  ]}
+/>
           </div>
 
           <button

@@ -18,45 +18,52 @@ export default function Home() {
           </a>
 
           <nav className="flex flex-wrap items-center justify-center gap-8 text-lg font-bold text-[#10251E] md:gap-12 md:text-xl">
-            <a href="/about" className="hover:text-[#3D6B4F] transition-colors">
-              About
-            </a>
+  <a href="/about" className="hover:text-[#3D6B4F] transition-colors">
+    About
+  </a>
 
-            <a
-              href="/work-model"
-              className="hover:text-[#3D6B4F] transition-colors"
-            >
-              Our Work Model
-            </a>
+  <a
+    href="/work-model"
+    className="hover:text-[#3D6B4F] transition-colors"
+  >
+    Our Work Model
+  </a>
 
-            <a
-              href="/services"
-              className="hover:text-[#3D6B4F] transition-colors"
-            >
-              Services
-            </a>
+  <a
+    href="/services"
+    className="hover:text-[#3D6B4F] transition-colors"
+  >
+    Services
+  </a>
 
-            <a
-              href="/knowledge-hub"
-              className="hover:text-[#3D6B4F] transition-colors"
-            >
-              Knowledge Hub
-            </a>
+  <a
+    href="/knowledge-hub"
+    className="hover:text-[#3D6B4F] transition-colors"
+  >
+    Knowledge Hub
+  </a>
 
-            <a
-              href="/insights"
-              className="hover:text-[#3D6B4F] transition-colors"
-            >
-              Insights
-            </a>
+  <a
+    href="/insights"
+    className="hover:text-[#3D6B4F] transition-colors"
+  >
+    Insights
+  </a>
 
-            <a
-              href="/contact"
-              className="hover:text-[#3D6B4F] transition-colors"
-            >
-              Contact Us
-            </a>
-          </nav>
+  <a
+    href="/assessments"
+    className="hover:text-[#3D6B4F] transition-colors"
+  >
+    ESG Value Assessments
+  </a>
+
+  <a
+    href="/contact"
+    className="hover:text-[#3D6B4F] transition-colors"
+  >
+    Contact Us
+  </a>
+</nav>
         </div>
       </header>
 

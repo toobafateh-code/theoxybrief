@@ -60,13 +60,23 @@ export default function RealEstateValueIntelligencePage() {
     const occupancyRate = Number(form.occupancyRate) || 0;
 
     // Benchmark assumptions
-    const energySavings = energyCost * 0.15; // 15%
-    const waterSavings = waterCost * 0.20; // 20%
-    const maintenanceSavings = maintenanceCost * 0.10; // 10%
+    const energySavingsRate = 0.15; // 15%
+    const waterSavingsRate = 0.2; // 20%
+    const maintenanceSavingsRate = 0.1; // 10%
+
+    // Savings calculations
+    const energySavings = energyCost * energySavingsRate;
+    const waterSavings = waterCost * waterSavingsRate;
+    const maintenanceSavings = maintenanceCost * maintenanceSavingsRate;
 
     const totalAnnualSavings =
       energySavings + waterSavings + maintenanceSavings;
 
+    // Scenario analysis
+    const conservativeSavings = totalAnnualSavings * 0.8;
+    const acceleratedSavings = totalAnnualSavings * 1.3;
+
+    // Financial calculations
     const roi =
       esgInvestment > 0
         ? (totalAnnualSavings / esgInvestment) * 100
@@ -84,58 +94,64 @@ export default function RealEstateValueIntelligencePage() {
 
     const improvedNOI = currentNOI + totalAnnualSavings;
 
-    // OXY Value Score™ (0–100)
-    const roiScore = Math.min(40, roi * 0.8);
-    const valueUpliftRatio =
-      currentNOI > 0
-        ? (assetValueIncrease / currentNOI) * 100
-        : 0;
-    const valueUpliftScore = Math.min(35, valueUpliftRatio * 2);
-    const occupancyScore = Math.min(15, occupancyRate * 0.15);
+    // OXY Value Score™
+    let oxyValueScore = 50;
 
-    let objectiveScore = 5;
-    if (form.primaryObjective === "Increase Asset Value") objectiveScore = 10;
-    if (form.primaryObjective === "Reduce Operating Costs") objectiveScore = 8;
-    if (form.primaryObjective === "Improve Occupancy") objectiveScore = 7;
+    if (roi >= 30) oxyValueScore += 20;
+    else if (roi >= 20) oxyValueScore += 15;
+    else if (roi >= 10) oxyValueScore += 10;
 
-    const valueScore = Math.min(
-      100,
-      roiScore +
-        valueUpliftScore +
-        occupancyScore +
-        objectiveScore
+    if (paybackYears > 0 && paybackYears <= 3) oxyValueScore += 15;
+    else if (paybackYears <= 5) oxyValueScore += 10;
+    else if (paybackYears <= 7) oxyValueScore += 5;
+
+    if (occupancyRate >= 90) oxyValueScore += 10;
+    else if (occupancyRate >= 80) oxyValueScore += 5;
+
+    if (form.primaryObjective === "Increase Asset Value") {
+      oxyValueScore += 5;
+    }
+
+    oxyValueScore = Math.max(
+      0,
+      Math.min(100, Math.round(oxyValueScore))
     );
 
-    // Confidence Index™ (0–100)
-    let confidenceIndex = 100;
+    // Confidence Index™
+    const allFields = Object.values(form);
+    const completedFields = allFields.filter(
+      (value) => value !== ""
+    ).length;
 
-    if (!form.portfolioArea) confidenceIndex -= 5;
-    if (!form.numberOfProperties) confidenceIndex -= 5;
-    if (!form.energyCost) confidenceIndex -= 10;
-    if (!form.waterCost) confidenceIndex -= 10;
-    if (!form.maintenanceCost) confidenceIndex -= 10;
-    if (!form.currentNOI) confidenceIndex -= 15;
-    if (!form.capRate) confidenceIndex -= 15;
-    if (!form.occupancyRate) confidenceIndex -= 10;
-    if (!form.esgInvestment) confidenceIndex -= 10;
-    if (!form.primaryObjective) confidenceIndex -= 10;
-
-    confidenceIndex = Math.max(
-      0,
-      Math.min(100, confidenceIndex)
+    const confidenceIndex = Math.round(
+      (completedFields / allFields.length) * 100
     );
 
     return {
+      // Assumptions
+      energySavingsRate,
+      waterSavingsRate,
+      maintenanceSavingsRate,
+
+      // Detailed savings
       energySavings,
       waterSavings,
       maintenanceSavings,
+
+      // Core outputs
       totalAnnualSavings,
       roi,
       paybackYears,
       assetValueIncrease,
       improvedNOI,
-      valueScore,
+
+      // Proprietary scores
+      oxyValueScore,
       confidenceIndex,
+
+      // Scenario analysis
+      conservativeSavings,
+      acceleratedSavings,
     };
   }, [form]);
 
@@ -146,20 +162,18 @@ export default function RealEstateValueIntelligencePage() {
 
     try {
       await new Promise((resolve) => setTimeout(resolve, 2000));
-
       setSubmitted(true);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (error) {
       console.error("Value Intelligence assessment failed:", error);
-      alert("Something went wrong. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   }
 
-  // =========================
+  // =====================================================
   // REPORT VIEW
-  // =========================
+  // =====================================================
   if (submitted) {
     return (
       <main className="min-h-screen bg-[#ECFDF5] px-6 py-24 text-[#10251E] md:px-16">
@@ -180,12 +194,10 @@ export default function RealEstateValueIntelligencePage() {
             </p>
 
             {/* Key Metrics */}
-            <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-12 grid gap-6 md:grid-cols-3">
               <MetricCard
                 title="Estimated Annual Savings"
-                value={formatCurrency(
-                  results.totalAnnualSavings
-                )}
+                value={formatCurrency(results.totalAnnualSavings)}
               />
               <MetricCard
                 title="ROI"
@@ -193,60 +205,53 @@ export default function RealEstateValueIntelligencePage() {
               />
               <MetricCard
                 title="Payback Period"
-                value={`${results.paybackYears.toFixed(
-                  1
-                )} Years`}
+                value={`${results.paybackYears.toFixed(1)} Years`}
               />
               <MetricCard
                 title="Asset Value Increase"
-                value={formatCurrency(
-                  results.assetValueIncrease
-                )}
+                value={formatCurrency(results.assetValueIncrease)}
               />
               <MetricCard
                 title="OXY Value Score™"
-                value={`${results.valueScore.toFixed(
-                  0
-                )} / 100`}
+                value={`${results.oxyValueScore} / 100`}
               />
               <MetricCard
                 title="Confidence Index™"
-                value={`${results.confidenceIndex.toFixed(
-                  0
-                )} / 100`}
+                value={`${results.confidenceIndex} / 100`}
               />
             </div>
 
+            {/* Proprietary Scores */}
             <Section
               title="Proprietary Scores"
-              content={`Your OXY Value Score™ is ${results.valueScore.toFixed(
-                0
-              )}/100, indicating the potential to convert sustainability initiatives into measurable financial performance. Your Confidence Index™ is ${results.confidenceIndex.toFixed(
-                0
-              )}/100, reflecting the completeness and reliability of the data used in this analysis.`}
+              content={`Your OXY Value Score™ is ${results.oxyValueScore}/100, indicating the potential to convert sustainability initiatives into measurable financial performance. Your Confidence Index™ is ${results.confidenceIndex}/100, reflecting the completeness and reliability of the data used in this analysis.`}
             />
 
+            {/* Executive Summary */}
             <Section
               title="Executive Summary"
               content={`Your portfolio may unlock approximately ${formatCurrency(
                 results.totalAnnualSavings
-              )} in annual savings. This could improve Net Operating Income (NOI) to ${formatCurrency(
+              )} in annual savings, improve NOI to ${formatCurrency(
                 results.improvedNOI
-              )} and increase asset value by approximately ${formatCurrency(
+              )}, and increase asset value by approximately ${formatCurrency(
                 results.assetValueIncrease
               )}.`}
             />
 
+            {/* Observe */}
             <Section
               title="Observe"
-              content="Your operating cost profile reveals material opportunities in energy, water, and maintenance optimization."
+              content="Your operating cost structure indicates meaningful opportunities in energy, water, and maintenance optimization."
             />
 
+            {/* Translate */}
             <Section
               title="Translate"
-              content="Lower operating expenses directly increase NOI. Higher NOI supports stronger valuations when capitalized using market cap rates."
+              content="Operational efficiencies reduce recurring expenses, directly increasing Net Operating Income (NOI) and enhancing property valuation through cap rate capitalization."
             />
 
+            {/* Yield */}
             <Section
               title="Yield"
               content={`Projected ROI is ${results.roi.toFixed(
@@ -256,11 +261,7 @@ export default function RealEstateValueIntelligencePage() {
               )} years.`}
             />
 
-            <Section
-              title="How We Calculated These Results"
-              content="This analysis applies benchmark assumptions of 15% energy savings, 20% water savings, and 10% maintenance savings. Asset value increase is estimated by dividing annual savings by the cap rate provided."
-            />
-
+            {/* Benchmark Evidence */}
             <Section
               title="Benchmark Evidence"
               content={`Estimated annual savings are composed of ${formatCurrency(
@@ -272,15 +273,53 @@ export default function RealEstateValueIntelligencePage() {
               )} from maintenance efficiencies.`}
             />
 
+            {/* Scenario Analysis */}
+            <div className="mt-12">
+              <h2 className="text-3xl font-bold">
+                Scenario Analysis
+              </h2>
+
+              <p className="mt-4 text-lg leading-8 text-[#53645D]">
+                The following scenarios illustrate how annual savings
+                may vary under conservative, base case, and accelerated
+                implementation assumptions.
+              </p>
+
+              <div className="mt-6 grid gap-6 md:grid-cols-3">
+                <MetricCard
+                  title="Conservative Case"
+                  value={formatCurrency(
+                    results.conservativeSavings
+                  )}
+                  subtitle="80% of the base case estimate."
+                />
+
+                <MetricCard
+                  title="Base Case"
+                  value={formatCurrency(
+                    results.totalAnnualSavings
+                  )}
+                  subtitle="Expected outcome using benchmark assumptions."
+                />
+
+                <MetricCard
+                  title="Accelerated Case"
+                  value={formatCurrency(
+                    results.acceleratedSavings
+                  )}
+                  subtitle="130% of the base case estimate."
+                />
+              </div>
+            </div>
+
+            {/* Recommended Next Steps */}
             <div className="mt-12 rounded-[2rem] bg-[#ECFDF5] p-8">
               <h2 className="text-3xl font-bold">
                 Recommended Next Steps
               </h2>
 
               <ul className="mt-6 space-y-3 text-lg leading-8 text-[#53645D]">
-                <li>
-                  • Conduct a detailed energy and water audit.
-                </li>
+                <li>• Conduct a detailed energy and water audit.</li>
                 <li>
                   • Prioritize highest-return efficiency projects.
                 </li>
@@ -301,6 +340,7 @@ export default function RealEstateValueIntelligencePage() {
               </p>
             </div>
 
+            {/* CTA */}
             <div className="mt-12 rounded-[2rem] bg-[#10251E] px-8 py-12 text-center text-white">
               <p className="text-lg font-bold uppercase tracking-[0.35em] text-[#9AC7B0]">
                 Strategic Advisory
@@ -312,8 +352,9 @@ export default function RealEstateValueIntelligencePage() {
               </h2>
 
               <p className="mx-auto mt-4 max-w-3xl text-lg leading-8 text-white/80">
-                Book a strategy session with The OXY Brief to
-                develop a tailored ESG value creation roadmap.
+                Book a strategy session with The OXY Brief to develop
+                a tailored ESG value creation roadmap for your
+                portfolio.
               </p>
 
               <a
@@ -329,9 +370,9 @@ export default function RealEstateValueIntelligencePage() {
     );
   }
 
-  // =========================
+  // =====================================================
   // FORM VIEW
-  // =========================
+  // =====================================================
   return (
     <main className="min-h-screen bg-[#ECFDF5] px-6 py-24 text-[#10251E] md:px-16">
       <section className="mx-auto max-w-5xl">
@@ -345,10 +386,10 @@ export default function RealEstateValueIntelligencePage() {
           </h1>
 
           <p className="mx-auto mt-6 max-w-4xl text-xl leading-9 text-[#53645D]">
-            Provide your actual operational and financial data
-            to receive a precise analysis of annual savings,
-            ROI, payback period, NOI improvement, and asset
-            value uplift.
+            Provide your actual operational and financial data to
+            receive a precise analysis of annual savings, ROI,
+            payback period, NOI improvement, asset value uplift, and
+            proprietary intelligence scores.
           </p>
         </div>
 
@@ -356,11 +397,6 @@ export default function RealEstateValueIntelligencePage() {
           <h2 className="text-3xl font-bold">
             Advanced Financial Inputs
           </h2>
-
-          <p className="mt-4 text-lg leading-8 text-[#53645D]">
-            Enter your actual operating and financial data to
-            generate a precise OXY Value Intelligence™ Report.
-          </p>
 
           <form
             onSubmit={handleSubmit}
@@ -435,7 +471,7 @@ export default function RealEstateValueIntelligencePage() {
               onChange={(value) =>
                 updateField("occupancyRate", value)
               }
-              placeholder="e.g. 92"
+              placeholder="e.g. 91"
             />
 
             <InputField
@@ -462,9 +498,7 @@ export default function RealEstateValueIntelligencePage() {
                 }
                 className="mt-3 w-full rounded-2xl border border-[#10251E]/15 bg-[#ECFDF5] px-5 py-4 outline-none focus:border-[#3D6B4F]"
               >
-                <option value="">
-                  Select an objective
-                </option>
+                <option value="">Select an objective</option>
                 <option>Reduce Operating Costs</option>
                 <option>Increase Asset Value</option>
                 <option>Improve Occupancy</option>
@@ -480,11 +514,10 @@ export default function RealEstateValueIntelligencePage() {
               {isSubmitting ? (
                 <span className="flex items-center justify-center gap-3">
                   <span className="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-                  Generating Your Precise OXY Value
-                  Intelligence™ Report...
+                  Generating Your OXY Value Intelligence™ Report...
                 </span>
               ) : (
-                "Generate Precise OXY Value Intelligence™ Report"
+                "Generate OXY Value Intelligence™ Report"
               )}
             </button>
           </form>
@@ -493,10 +526,6 @@ export default function RealEstateValueIntelligencePage() {
     </main>
   );
 }
-
-// =========================
-// HELPER COMPONENTS
-// =========================
 
 function InputField({
   label,
@@ -529,9 +558,11 @@ function InputField({
 function MetricCard({
   title,
   value,
+  subtitle,
 }: {
   title: string;
   value: string;
+  subtitle?: string;
 }) {
   return (
     <div className="rounded-[2rem] bg-[#ECFDF5] p-8">
@@ -539,6 +570,11 @@ function MetricCard({
       <p className="mt-4 text-4xl font-bold text-[#3D6B4F]">
         {value}
       </p>
+      {subtitle && (
+        <p className="mt-3 text-sm leading-6 text-[#53645D]">
+          {subtitle}
+        </p>
+      )}
     </div>
   );
 }

@@ -1,4 +1,28 @@
+"use client";
+
+import { useState } from "react";
+
 export default function RealEstateValueIntelligencePage() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+
+    // Show loading state
+    setIsSubmitting(true);
+
+    // Temporary delay to simulate calculations
+    // In the next step, this will be replaced with actual calculations,
+    // email delivery, and report generation.
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    // Hide loading state
+    setIsSubmitting(false);
+
+    // Temporary placeholder action
+    alert("Your OXY Value Intelligence™ Report is being generated.");
+  }
+
   return (
     <main className="min-h-screen bg-[#ECFDF5] px-6 py-24 text-[#10251E] md:px-16">
       <section className="mx-auto max-w-5xl">
@@ -28,16 +52,20 @@ export default function RealEstateValueIntelligencePage() {
             precise OXY Value Intelligence™ Report.
           </p>
 
-          <form className="mt-10 grid gap-8 md:grid-cols-2">
+          <form
+            onSubmit={handleSubmit}
+            className="mt-10 grid gap-8 md:grid-cols-2"
+          >
             {/* Portfolio Data */}
             <div>
               <label className="block text-sm font-bold uppercase tracking-[0.2em] text-[#3D6B4F]">
                 Total Portfolio Area (sq ft)
               </label>
               <input
+                required
                 type="number"
                 placeholder="e.g. 500000"
-                className="mt-3 w-full rounded-2xl border border-[#10251E]/15 bg-[#ECFDF5] px-5 py-4"
+                className="mt-3 w-full rounded-2xl border border-[#10251E]/15 bg-[#ECFDF5] px-5 py-4 outline-none focus:border-[#3D6B4F]"
               />
             </div>
 
@@ -46,9 +74,10 @@ export default function RealEstateValueIntelligencePage() {
                 Number of Properties
               </label>
               <input
+                required
                 type="number"
                 placeholder="e.g. 12"
-                className="mt-3 w-full rounded-2xl border border-[#10251E]/15 bg-[#ECFDF5] px-5 py-4"
+                className="mt-3 w-full rounded-2xl border border-[#10251E]/15 bg-[#ECFDF5] px-5 py-4 outline-none focus:border-[#3D6B4F]"
               />
             </div>
 
@@ -58,9 +87,10 @@ export default function RealEstateValueIntelligencePage() {
                 Annual Energy Cost (USD)
               </label>
               <input
+                required
                 type="number"
                 placeholder="e.g. 250000"
-                className="mt-3 w-full rounded-2xl border border-[#10251E]/15 bg-[#ECFDF5] px-5 py-4"
+                className="mt-3 w-full rounded-2xl border border-[#10251E]/15 bg-[#ECFDF5] px-5 py-4 outline-none focus:border-[#3D6B4F]"
               />
             </div>
 
@@ -69,9 +99,10 @@ export default function RealEstateValueIntelligencePage() {
                 Annual Water Cost (USD)
               </label>
               <input
+                required
                 type="number"
                 placeholder="e.g. 50000"
-                className="mt-3 w-full rounded-2xl border border-[#10251E]/15 bg-[#ECFDF5] px-5 py-4"
+                className="mt-3 w-full rounded-2xl border border-[#10251E]/15 bg-[#ECFDF5] px-5 py-4 outline-none focus:border-[#3D6B4F]"
               />
             </div>
 
@@ -80,9 +111,10 @@ export default function RealEstateValueIntelligencePage() {
                 Annual Maintenance Cost (USD)
               </label>
               <input
+                required
                 type="number"
                 placeholder="e.g. 300000"
-                className="mt-3 w-full rounded-2xl border border-[#10251E]/15 bg-[#ECFDF5] px-5 py-4"
+                className="mt-3 w-full rounded-2xl border border-[#10251E]/15 bg-[#ECFDF5] px-5 py-4 outline-none focus:border-[#3D6B4F]"
               />
             </div>
 
@@ -92,9 +124,10 @@ export default function RealEstateValueIntelligencePage() {
                 Current NOI (USD)
               </label>
               <input
+                required
                 type="number"
                 placeholder="e.g. 5000000"
-                className="mt-3 w-full rounded-2xl border border-[#10251E]/15 bg-[#ECFDF5] px-5 py-4"
+                className="mt-3 w-full rounded-2xl border border-[#10251E]/15 bg-[#ECFDF5] px-5 py-4 outline-none focus:border-[#3D6B4F]"
               />
             </div>
 
@@ -103,10 +136,11 @@ export default function RealEstateValueIntelligencePage() {
                 Cap Rate (%)
               </label>
               <input
+                required
                 type="number"
                 step="0.1"
                 placeholder="e.g. 6"
-                className="mt-3 w-full rounded-2xl border border-[#10251E]/15 bg-[#ECFDF5] px-5 py-4"
+                className="mt-3 w-full rounded-2xl border border-[#10251E]/15 bg-[#ECFDF5] px-5 py-4 outline-none focus:border-[#3D6B4F]"
               />
             </div>
 
@@ -115,10 +149,11 @@ export default function RealEstateValueIntelligencePage() {
                 Occupancy Rate (%)
               </label>
               <input
+                required
                 type="number"
                 step="0.1"
                 placeholder="e.g. 92"
-                className="mt-3 w-full rounded-2xl border border-[#10251E]/15 bg-[#ECFDF5] px-5 py-4"
+                className="mt-3 w-full rounded-2xl border border-[#10251E]/15 bg-[#ECFDF5] px-5 py-4 outline-none focus:border-[#3D6B4F]"
               />
             </div>
 
@@ -127,9 +162,10 @@ export default function RealEstateValueIntelligencePage() {
                 Planned ESG Investment (USD)
               </label>
               <input
+                required
                 type="number"
                 placeholder="e.g. 400000"
-                className="mt-3 w-full rounded-2xl border border-[#10251E]/15 bg-[#ECFDF5] px-5 py-4"
+                className="mt-3 w-full rounded-2xl border border-[#10251E]/15 bg-[#ECFDF5] px-5 py-4 outline-none focus:border-[#3D6B4F]"
               />
             </div>
 
@@ -138,7 +174,11 @@ export default function RealEstateValueIntelligencePage() {
               <label className="block text-sm font-bold uppercase tracking-[0.2em] text-[#3D6B4F]">
                 Primary Objective
               </label>
-              <select className="mt-3 w-full rounded-2xl border border-[#10251E]/15 bg-[#ECFDF5] px-5 py-4">
+              <select
+                required
+                className="mt-3 w-full rounded-2xl border border-[#10251E]/15 bg-[#ECFDF5] px-5 py-4 outline-none focus:border-[#3D6B4F]"
+              >
+                <option value="">Select an objective</option>
                 <option>Reduce Operating Costs</option>
                 <option>Increase Asset Value</option>
                 <option>Improve Occupancy</option>
@@ -149,9 +189,17 @@ export default function RealEstateValueIntelligencePage() {
             {/* Submit Button */}
             <button
               type="submit"
-              className="md:col-span-2 mt-4 w-full rounded-full bg-[#10251E] px-8 py-4 font-semibold text-white hover:bg-[#1D3A30]"
+              disabled={isSubmitting}
+              className="md:col-span-2 mt-4 w-full rounded-full bg-[#10251E] px-8 py-4 font-semibold text-white hover:bg-[#1D3A30] disabled:cursor-not-allowed disabled:opacity-80"
             >
-              Generate Precise OXY Value Intelligence™ Report
+              {isSubmitting ? (
+                <span className="flex items-center justify-center gap-3">
+                  <span className="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                  Generating Your Precise OXY Value Intelligence™ Report...
+                </span>
+              ) : (
+                "Generate Precise OXY Value Intelligence™ Report"
+              )}
             </button>
           </form>
         </div>

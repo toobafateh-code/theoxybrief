@@ -8,19 +8,24 @@ export default function RealEstateValueIntelligencePage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    // Show loading state
+    // Start loading
     setIsSubmitting(true);
 
-    // Temporary delay to simulate calculations
-    // In the next step, this will be replaced with actual calculations,
-    // email delivery, and report generation.
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    try {
+      // Temporary delay to simulate calculations
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    // Hide loading state
-    setIsSubmitting(false);
-
-    // Temporary placeholder action
-    alert("Your OXY Value Intelligence™ Report is being generated.");
+      // Temporary success message
+      alert(
+        "Your Precise OXY Value Intelligence™ Report is ready. The full calculation engine will be connected next."
+      );
+    } catch (error) {
+      console.error("Value Intelligence assessment failed:", error);
+      alert("Something went wrong. Please try again.");
+    } finally {
+      // Always stop loading
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -56,7 +61,6 @@ export default function RealEstateValueIntelligencePage() {
             onSubmit={handleSubmit}
             className="mt-10 grid gap-8 md:grid-cols-2"
           >
-            {/* Portfolio Data */}
             <div>
               <label className="block text-sm font-bold uppercase tracking-[0.2em] text-[#3D6B4F]">
                 Total Portfolio Area (sq ft)
@@ -81,7 +85,6 @@ export default function RealEstateValueIntelligencePage() {
               />
             </div>
 
-            {/* Operating Costs */}
             <div>
               <label className="block text-sm font-bold uppercase tracking-[0.2em] text-[#3D6B4F]">
                 Annual Energy Cost (USD)
@@ -118,7 +121,6 @@ export default function RealEstateValueIntelligencePage() {
               />
             </div>
 
-            {/* Financial Metrics */}
             <div>
               <label className="block text-sm font-bold uppercase tracking-[0.2em] text-[#3D6B4F]">
                 Current NOI (USD)
@@ -169,7 +171,6 @@ export default function RealEstateValueIntelligencePage() {
               />
             </div>
 
-            {/* Objective */}
             <div>
               <label className="block text-sm font-bold uppercase tracking-[0.2em] text-[#3D6B4F]">
                 Primary Objective
@@ -186,7 +187,6 @@ export default function RealEstateValueIntelligencePage() {
               </select>
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               disabled={isSubmitting}

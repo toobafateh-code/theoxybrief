@@ -57,11 +57,12 @@ export default function RealEstateValueIntelligencePage() {
     const esgInvestment = Number(form.esgInvestment) || 0;
     const capRatePercent = Number(form.capRate) || 0;
     const currentNOI = Number(form.currentNOI) || 0;
+    const occupancyRate = Number(form.occupancyRate) || 0;
 
     // Benchmark assumptions
     const energySavings = energyCost * 0.15; // 15%
-    const waterSavings = waterCost * 0.2; // 20%
-    const maintenanceSavings = maintenanceCost * 0.1; // 10%
+    const waterSavings = waterCost * 0.20; // 20%
+    const maintenanceSavings = maintenanceCost * 0.10; // 10%
 
     const totalAnnualSavings =
       energySavings + waterSavings + maintenanceSavings;
@@ -83,6 +84,47 @@ export default function RealEstateValueIntelligencePage() {
 
     const improvedNOI = currentNOI + totalAnnualSavings;
 
+    // OXY Value Score™ (0–100)
+    const roiScore = Math.min(40, roi * 0.8);
+    const valueUpliftRatio =
+      currentNOI > 0
+        ? (assetValueIncrease / currentNOI) * 100
+        : 0;
+    const valueUpliftScore = Math.min(35, valueUpliftRatio * 2);
+    const occupancyScore = Math.min(15, occupancyRate * 0.15);
+
+    let objectiveScore = 5;
+    if (form.primaryObjective === "Increase Asset Value") objectiveScore = 10;
+    if (form.primaryObjective === "Reduce Operating Costs") objectiveScore = 8;
+    if (form.primaryObjective === "Improve Occupancy") objectiveScore = 7;
+
+    const valueScore = Math.min(
+      100,
+      roiScore +
+        valueUpliftScore +
+        occupancyScore +
+        objectiveScore
+    );
+
+    // Confidence Index™ (0–100)
+    let confidenceIndex = 100;
+
+    if (!form.portfolioArea) confidenceIndex -= 5;
+    if (!form.numberOfProperties) confidenceIndex -= 5;
+    if (!form.energyCost) confidenceIndex -= 10;
+    if (!form.waterCost) confidenceIndex -= 10;
+    if (!form.maintenanceCost) confidenceIndex -= 10;
+    if (!form.currentNOI) confidenceIndex -= 15;
+    if (!form.capRate) confidenceIndex -= 15;
+    if (!form.occupancyRate) confidenceIndex -= 10;
+    if (!form.esgInvestment) confidenceIndex -= 10;
+    if (!form.primaryObjective) confidenceIndex -= 10;
+
+    confidenceIndex = Math.max(
+      0,
+      Math.min(100, confidenceIndex)
+    );
+
     return {
       energySavings,
       waterSavings,
@@ -92,6 +134,8 @@ export default function RealEstateValueIntelligencePage() {
       paybackYears,
       assetValueIncrease,
       improvedNOI,
+      valueScore,
+      confidenceIndex,
     };
   }, [form]);
 
@@ -101,13 +145,9 @@ export default function RealEstateValueIntelligencePage() {
     setIsSubmitting(true);
 
     try {
-      // Simulate processing time
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      // Show report
       setSubmitted(true);
-
-      // Scroll to top
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (error) {
       console.error("Value Intelligence assessment failed:", error);
@@ -118,7 +158,7 @@ export default function RealEstateValueIntelligencePage() {
   }
 
   // =========================
-  // GENERATED REPORT VIEW
+  // REPORT VIEW
   // =========================
   if (submitted) {
     return (
@@ -134,16 +174,18 @@ export default function RealEstateValueIntelligencePage() {
             </h1>
 
             <p className="mt-6 max-w-4xl text-xl leading-9 text-[#53645D]">
-              Based on your actual operational and financial data, we identified
-              precise opportunities to improve operating performance and enhance
-              property value.
+              Based on your actual operational and financial data, we
+              identified precise opportunities to improve operating
+              performance and enhance property value.
             </p>
 
             {/* Key Metrics */}
-            <div className="mt-12 grid gap-6 md:grid-cols-2">
+            <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               <MetricCard
                 title="Estimated Annual Savings"
-                value={formatCurrency(results.totalAnnualSavings)}
+                value={formatCurrency(
+                  results.totalAnnualSavings
+                )}
               />
               <MetricCard
                 title="ROI"
@@ -151,39 +193,60 @@ export default function RealEstateValueIntelligencePage() {
               />
               <MetricCard
                 title="Payback Period"
-                value={`${results.paybackYears.toFixed(1)} Years`}
+                value={`${results.paybackYears.toFixed(
+                  1
+                )} Years`}
               />
               <MetricCard
                 title="Asset Value Increase"
-                value={formatCurrency(results.assetValueIncrease)}
+                value={formatCurrency(
+                  results.assetValueIncrease
+                )}
+              />
+              <MetricCard
+                title="OXY Value Score™"
+                value={`${results.valueScore.toFixed(
+                  0
+                )} / 100`}
+              />
+              <MetricCard
+                title="Confidence Index™"
+                value={`${results.confidenceIndex.toFixed(
+                  0
+                )} / 100`}
               />
             </div>
 
-            {/* Executive Summary */}
+            <Section
+              title="Proprietary Scores"
+              content={`Your OXY Value Score™ is ${results.valueScore.toFixed(
+                0
+              )}/100, indicating the potential to convert sustainability initiatives into measurable financial performance. Your Confidence Index™ is ${results.confidenceIndex.toFixed(
+                0
+              )}/100, reflecting the completeness and reliability of the data used in this analysis.`}
+            />
+
             <Section
               title="Executive Summary"
               content={`Your portfolio may unlock approximately ${formatCurrency(
                 results.totalAnnualSavings
-              )} in annual savings. This could improve NOI to ${formatCurrency(
+              )} in annual savings. This could improve Net Operating Income (NOI) to ${formatCurrency(
                 results.improvedNOI
               )} and increase asset value by approximately ${formatCurrency(
                 results.assetValueIncrease
               )}.`}
             />
 
-            {/* Observe */}
             <Section
               title="Observe"
-              content="Your operating cost structure indicates significant opportunities in energy, water, and maintenance optimization."
+              content="Your operating cost profile reveals material opportunities in energy, water, and maintenance optimization."
             />
 
-            {/* Translate */}
             <Section
               title="Translate"
-              content="Reducing operating expenses directly increases Net Operating Income (NOI). Higher NOI enhances valuation when capitalized using market cap rates."
+              content="Lower operating expenses directly increase NOI. Higher NOI supports stronger valuations when capitalized using market cap rates."
             />
 
-            {/* Yield */}
             <Section
               title="Yield"
               content={`Projected ROI is ${results.roi.toFixed(
@@ -193,42 +256,64 @@ export default function RealEstateValueIntelligencePage() {
               )} years.`}
             />
 
-            {/* Methodology */}
             <Section
               title="How We Calculated These Results"
-              content="The analysis applies benchmark assumptions of 15% energy savings, 20% water savings, and 10% maintenance savings. Asset value increase is estimated by dividing annual savings by your stated cap rate."
+              content="This analysis applies benchmark assumptions of 15% energy savings, 20% water savings, and 10% maintenance savings. Asset value increase is estimated by dividing annual savings by the cap rate provided."
             />
 
-            {/* Recommended Next Steps */}
+            <Section
+              title="Benchmark Evidence"
+              content={`Estimated annual savings are composed of ${formatCurrency(
+                results.energySavings
+              )} from energy efficiency, ${formatCurrency(
+                results.waterSavings
+              )} from water optimization, and ${formatCurrency(
+                results.maintenanceSavings
+              )} from maintenance efficiencies.`}
+            />
+
             <div className="mt-12 rounded-[2rem] bg-[#ECFDF5] p-8">
-              <h2 className="text-3xl font-bold">Recommended Next Steps</h2>
+              <h2 className="text-3xl font-bold">
+                Recommended Next Steps
+              </h2>
 
               <ul className="mt-6 space-y-3 text-lg leading-8 text-[#53645D]">
-                <li>• Conduct a detailed energy and water audit.</li>
-                <li>• Prioritize the highest-return efficiency projects.</li>
-                <li>• Build an ESG capital investment roadmap.</li>
-                <li>• Evaluate certification and tenant value strategies.</li>
-                <li>• Track realized savings and valuation impact.</li>
+                <li>
+                  • Conduct a detailed energy and water audit.
+                </li>
+                <li>
+                  • Prioritize highest-return efficiency projects.
+                </li>
+                <li>
+                  • Develop an ESG capital investment roadmap.
+                </li>
+                <li>
+                  • Evaluate certification and tenant value
+                  strategies.
+                </li>
+                <li>
+                  • Track realized savings and valuation impact.
+                </li>
               </ul>
 
               <p className="mt-6 text-lg leading-8 text-[#53645D]">
-                We are here to support you at every step of the process.
+                We are here to support you at every step.
               </p>
             </div>
 
-            {/* CTA */}
             <div className="mt-12 rounded-[2rem] bg-[#10251E] px-8 py-12 text-center text-white">
               <p className="text-lg font-bold uppercase tracking-[0.35em] text-[#9AC7B0]">
                 Strategic Advisory
               </p>
 
               <h2 className="mt-4 text-3xl font-bold md:text-4xl">
-                Ready to Turn Sustainability into Financial Performance?
+                Ready to Turn Sustainability into Financial
+                Performance?
               </h2>
 
               <p className="mx-auto mt-4 max-w-3xl text-lg leading-8 text-white/80">
-                Book a strategy session with The OXY Brief to build a tailored
-                ESG value creation roadmap for your portfolio.
+                Book a strategy session with The OXY Brief to
+                develop a tailored ESG value creation roadmap.
               </p>
 
               <a
@@ -260,18 +345,21 @@ export default function RealEstateValueIntelligencePage() {
           </h1>
 
           <p className="mx-auto mt-6 max-w-4xl text-xl leading-9 text-[#53645D]">
-            Provide your actual operational and financial data to receive a
-            precise analysis of annual savings, ROI, payback period, NOI
-            improvement, and asset value uplift.
+            Provide your actual operational and financial data
+            to receive a precise analysis of annual savings,
+            ROI, payback period, NOI improvement, and asset
+            value uplift.
           </p>
         </div>
 
         <div className="mt-14 rounded-[2rem] bg-white p-10 shadow-sm md:p-14">
-          <h2 className="text-3xl font-bold">Advanced Financial Inputs</h2>
+          <h2 className="text-3xl font-bold">
+            Advanced Financial Inputs
+          </h2>
 
           <p className="mt-4 text-lg leading-8 text-[#53645D]">
-            Enter your actual operating and financial data to generate a precise
-            OXY Value Intelligence™ Report.
+            Enter your actual operating and financial data to
+            generate a precise OXY Value Intelligence™ Report.
           </p>
 
           <form
@@ -281,63 +369,81 @@ export default function RealEstateValueIntelligencePage() {
             <InputField
               label="Total Portfolio Area (sq ft)"
               value={form.portfolioArea}
-              onChange={(value) => updateField("portfolioArea", value)}
+              onChange={(value) =>
+                updateField("portfolioArea", value)
+              }
               placeholder="e.g. 500000"
             />
 
             <InputField
               label="Number of Properties"
               value={form.numberOfProperties}
-              onChange={(value) => updateField("numberOfProperties", value)}
+              onChange={(value) =>
+                updateField("numberOfProperties", value)
+              }
               placeholder="e.g. 12"
             />
 
             <InputField
               label="Annual Energy Cost (USD)"
               value={form.energyCost}
-              onChange={(value) => updateField("energyCost", value)}
+              onChange={(value) =>
+                updateField("energyCost", value)
+              }
               placeholder="e.g. 250000"
             />
 
             <InputField
               label="Annual Water Cost (USD)"
               value={form.waterCost}
-              onChange={(value) => updateField("waterCost", value)}
+              onChange={(value) =>
+                updateField("waterCost", value)
+              }
               placeholder="e.g. 50000"
             />
 
             <InputField
               label="Annual Maintenance Cost (USD)"
               value={form.maintenanceCost}
-              onChange={(value) => updateField("maintenanceCost", value)}
+              onChange={(value) =>
+                updateField("maintenanceCost", value)
+              }
               placeholder="e.g. 300000"
             />
 
             <InputField
               label="Current NOI (USD)"
               value={form.currentNOI}
-              onChange={(value) => updateField("currentNOI", value)}
+              onChange={(value) =>
+                updateField("currentNOI", value)
+              }
               placeholder="e.g. 5000000"
             />
 
             <InputField
               label="Cap Rate (%)"
               value={form.capRate}
-              onChange={(value) => updateField("capRate", value)}
+              onChange={(value) =>
+                updateField("capRate", value)
+              }
               placeholder="e.g. 6"
             />
 
             <InputField
               label="Occupancy Rate (%)"
               value={form.occupancyRate}
-              onChange={(value) => updateField("occupancyRate", value)}
+              onChange={(value) =>
+                updateField("occupancyRate", value)
+              }
               placeholder="e.g. 92"
             />
 
             <InputField
               label="Planned ESG Investment (USD)"
               value={form.esgInvestment}
-              onChange={(value) => updateField("esgInvestment", value)}
+              onChange={(value) =>
+                updateField("esgInvestment", value)
+              }
               placeholder="e.g. 400000"
             />
 
@@ -349,11 +455,16 @@ export default function RealEstateValueIntelligencePage() {
                 required
                 value={form.primaryObjective}
                 onChange={(e) =>
-                  updateField("primaryObjective", e.target.value)
+                  updateField(
+                    "primaryObjective",
+                    e.target.value
+                  )
                 }
                 className="mt-3 w-full rounded-2xl border border-[#10251E]/15 bg-[#ECFDF5] px-5 py-4 outline-none focus:border-[#3D6B4F]"
               >
-                <option value="">Select an objective</option>
+                <option value="">
+                  Select an objective
+                </option>
                 <option>Reduce Operating Costs</option>
                 <option>Increase Asset Value</option>
                 <option>Improve Occupancy</option>
@@ -369,7 +480,8 @@ export default function RealEstateValueIntelligencePage() {
               {isSubmitting ? (
                 <span className="flex items-center justify-center gap-3">
                   <span className="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-                  Generating Your Precise OXY Value Intelligence™ Report...
+                  Generating Your Precise OXY Value
+                  Intelligence™ Report...
                 </span>
               ) : (
                 "Generate Precise OXY Value Intelligence™ Report"
@@ -424,7 +536,9 @@ function MetricCard({
   return (
     <div className="rounded-[2rem] bg-[#ECFDF5] p-8">
       <h3 className="text-2xl font-bold">{title}</h3>
-      <p className="mt-4 text-4xl font-bold text-[#3D6B4F]">{value}</p>
+      <p className="mt-4 text-4xl font-bold text-[#3D6B4F]">
+        {value}
+      </p>
     </div>
   );
 }
@@ -439,7 +553,9 @@ function Section({
   return (
     <div className="mt-12">
       <h2 className="text-3xl font-bold">{title}</h2>
-      <p className="mt-4 text-lg leading-8 text-[#53645D]">{content}</p>
+      <p className="mt-4 text-lg leading-8 text-[#53645D]">
+        {content}
+      </p>
     </div>
   );
 }

@@ -417,6 +417,62 @@ console.log("FormSubmit response:", data);
               </ul>
             </div>
 
+{/* OXY VALUE INTELLIGENCE CTA */}
+<div className="mt-12 rounded-[2rem] bg-[#ECFDF5] p-10 text-center">
+  <p className="text-lg font-bold uppercase tracking-[0.35em] text-[#3D6B4F]">
+    OXY Value Intelligence™
+  </p>
+
+  <h2 className="mt-5 text-3xl font-bold leading-tight md:text-4xl">
+    Unlock a Precise Financial Analysis Using Your Actual Data
+  </h2>
+
+  <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-[#53645D]">
+    Your preliminary OXY Brief identified meaningful opportunities to
+    improve operating performance and enhance property value. Complete
+    the OXY Value Intelligence™ Assessment to calculate exact savings,
+    ROI, payback period, NOI uplift, and asset value increase using your
+    actual operating and financial data.
+  </p>
+
+  <div className="mt-8 grid gap-4 text-left md:grid-cols-2">
+    <div className="rounded-2xl bg-white p-6 shadow-sm">
+      <p className="font-semibold">✓ Exact Annual Savings</p>
+      <p className="mt-2 text-[#53645D]">
+        Based on your real energy, water, and maintenance costs.
+      </p>
+    </div>
+
+    <div className="rounded-2xl bg-white p-6 shadow-sm">
+      <p className="font-semibold">✓ ROI & Payback Period</p>
+      <p className="mt-2 text-[#53645D]">
+        Quantify financial returns on sustainability investments.
+      </p>
+    </div>
+
+    <div className="rounded-2xl bg-white p-6 shadow-sm">
+      <p className="font-semibold">✓ NOI Improvement</p>
+      <p className="mt-2 text-[#53645D]">
+        Measure the direct impact on property profitability.
+      </p>
+    </div>
+
+    <div className="rounded-2xl bg-white p-6 shadow-sm">
+      <p className="font-semibold">✓ Asset Value Increase</p>
+      <p className="mt-2 text-[#53645D]">
+        Estimate valuation uplift using cap rate methodology.
+      </p>
+    </div>
+  </div>
+
+  <a
+    href="/assessments/real-estate/value-intelligence"
+    className="mt-8 inline-block rounded-full bg-[#10251E] px-8 py-4 font-semibold text-white hover:bg-[#1D3A30]"
+  >
+    Start OXY Value Intelligence™ Assessment
+  </a>
+</div>
+
             {/* CTA */}
             <div className="mt-12 rounded-[2rem] bg-[#10251E] px-8 py-12 text-center text-white">
               <p className="text-lg uppercase tracking-[0.35em] text-[#B9D2B1]">

@@ -202,6 +202,132 @@ async function handleSubmit(e: React.FormEvent) {
     </li>
   </ul>
 </div>
+{/* TRANSLATE */}
+<div className="mt-10 rounded-[2rem] bg-[#ECFDF5] p-8">
+  <p className="text-sm font-bold uppercase tracking-[0.35em] text-[#3D6B4F]">
+    Translate
+  </p>
+
+  <h2 className="mt-3 text-2xl font-bold">
+    How these observations affect business performance
+  </h2>
+
+  <ul className="mt-6 space-y-3 text-lg leading-8 text-[#53645D]">
+    <li>
+      • Reducing {form.largestCost.toLowerCase()} expenses can directly improve
+      operating margins.
+    </li>
+    <li>
+      • Improved sustainability performance can enhance tenant appeal and reduce
+      vacancy risk.
+    </li>
+    <li>
+      • Lower operating costs increase net operating income (NOI).
+    </li>
+    <li>
+      • Higher NOI can translate into stronger asset valuations.
+    </li>
+    <li>
+      • Better ESG performance can improve resilience and investor confidence.
+    </li>
+  </ul>
+</div>
+
+{/* YIELD */}
+<div className="mt-10 rounded-[2rem] bg-white p-8 shadow-sm">
+  <p className="text-sm font-bold uppercase tracking-[0.35em] text-[#3D6B4F]">
+    Yield
+  </p>
+
+  <h2 className="mt-3 text-2xl font-bold">
+    Estimated financial outcomes and strategic benefits
+  </h2>
+
+  <div className="mt-6 grid gap-6 md:grid-cols-3">
+    <div className="rounded-[2rem] bg-[#ECFDF5] p-6">
+      <h3 className="text-lg font-bold">Annual Savings</h3>
+      <p className="mt-3 text-2xl font-bold text-[#3D6B4F]">
+        {results.savings}
+      </p>
+    </div>
+
+    <div className="rounded-[2rem] bg-[#ECFDF5] p-6">
+      <h3 className="text-lg font-bold">NOI Improvement</h3>
+      <p className="mt-3 text-2xl font-bold text-[#3D6B4F]">
+        {results.noiIncrease}
+      </p>
+    </div>
+
+    <div className="rounded-[2rem] bg-[#ECFDF5] p-6">
+      <h3 className="text-lg font-bold">Asset Value Increase</h3>
+      <p className="mt-3 text-2xl font-bold text-[#3D6B4F]">
+        {results.assetValueIncrease}
+      </p>
+    </div>
+  </div>
+
+  <ul className="mt-6 space-y-3 text-lg leading-8 text-[#53645D]">
+    <li>• Stronger tenant retention</li>
+    <li>• Reduced vacancy risk</li>
+    <li>• Improved market positioning</li>
+    <li>• Enhanced long-term asset resilience</li>
+  </ul>
+</div>
+
+{/* HOW WE ESTIMATED THESE RESULTS */}
+<div className="mt-10 rounded-[2rem] bg-[#ECFDF5] p-8">
+  <p className="text-sm font-bold uppercase tracking-[0.35em] text-[#3D6B4F]">
+    Methodology
+  </p>
+
+  <h2 className="mt-3 text-2xl font-bold">
+    How we estimated these results
+  </h2>
+
+  <p className="mt-4 text-lg leading-8 text-[#53645D]">
+    These estimates are based on your responses and industry benchmarks for
+    energy and water efficiency, green building performance, occupancy trends,
+    and real estate valuation methodologies.
+  </p>
+
+  <ol className="mt-6 space-y-3 text-lg leading-8 text-[#53645D]">
+    <li>
+      1. We identified likely operating cost reduction opportunities based on
+      your largest cost category and utility tracking maturity.
+    </li>
+    <li>
+      2. We translated potential savings into net operating income (NOI)
+      improvements.
+    </li>
+    <li>
+      3. We estimated valuation impact using representative capitalization
+      rate assumptions.
+    </li>
+    <li>
+      4. We incorporated qualitative benefits such as tenant demand and
+      reduced vacancy risk.
+    </li>
+  </ol>
+</div>
+
+{/* RECOMMENDED NEXT STEPS */}
+<div className="mt-10 rounded-[2rem] bg-white p-8 shadow-sm">
+  <p className="text-sm font-bold uppercase tracking-[0.35em] text-[#3D6B4F]">
+    Recommended Next Steps
+  </p>
+
+  <h2 className="mt-3 text-2xl font-bold">
+    Priority actions for the next 90 days
+  </h2>
+
+  <ul className="mt-6 space-y-3 text-lg leading-8 text-[#53645D]">
+    <li>• Conduct a baseline energy and water performance review</li>
+    <li>• Quantify NOI and valuation improvement opportunities</li>
+    <li>• Identify quick wins with attractive payback periods</li>
+    <li>• Evaluate green certification and tenant value opportunities</li>
+    <li>• Develop a prioritized ESG value creation roadmap</li>
+  </ul>
+</div>
             <div className="mt-12 grid gap-6 md:grid-cols-3">
               <div className="mt-12 rounded-[2rem] bg-[#ECFDF5] p-8">
   <h2 className="text-2xl font-bold">Executive Summary</h2>

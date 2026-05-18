@@ -123,13 +123,23 @@ export default function RealEstateAssessmentPage() {
         results.assetValueIncrease
       );
 
-      await fetch(
-        "https://formsubmit.co/ajax/tooba@theoxybrief.com",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const response = await fetch(
+  "https://formsubmit.co/ajax/tooba@theoxybrief.com",
+  {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+    },
+    body: formData,
+  }
+);
+
+if (!response.ok) {
+  throw new Error("Failed to send assessment email");
+}
+
+const data = await response.json();
+console.log("FormSubmit response:", data);
     } catch (error) {
       console.error("Assessment email failed:", error);
     }

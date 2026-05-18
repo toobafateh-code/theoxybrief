@@ -182,6 +182,26 @@ async function handleSubmit(e: React.FormEvent) {
               property value.
             </p>
 
+<div className="mt-10 rounded-[2rem] bg-[#ECFDF5] p-8">
+  <p className="text-sm font-bold uppercase tracking-[0.35em] text-[#3D6B4F]">
+    Observe
+  </p>
+
+  <h2 className="mt-3 text-2xl font-bold">
+    What your responses indicate
+  </h2>
+
+  <ul className="mt-6 space-y-3 text-lg leading-8 text-[#53645D]">
+    <li>• You manage a {form.propertyType.toLowerCase()} portfolio.</li>
+    <li>• Your portfolio size is classified as {form.portfolioSize.toLowerCase()}.</li>
+    <li>• Your largest operating cost is {form.largestCost.toLowerCase()}.</li>
+    <li>• Utility tracking is {form.tracksUtilities.toLowerCase()}.</li>
+    <li>
+      • Your primary objective is{" "}
+      {form.primaryObjective.toLowerCase()}.
+    </li>
+  </ul>
+</div>
             <div className="mt-12 grid gap-6 md:grid-cols-3">
               <div className="mt-12 rounded-[2rem] bg-[#ECFDF5] p-8">
   <h2 className="text-2xl font-bold">Executive Summary</h2>

@@ -139,6 +139,16 @@ export default function RealEstateAssessmentPage() {
             </p>
 
             <div className="mt-12 grid gap-6 md:grid-cols-3">
+              <div className="mt-12 rounded-[2rem] bg-[#ECFDF5] p-8">
+  <h2 className="text-2xl font-bold">Executive Summary</h2>
+
+  <p className="mt-4 text-lg leading-8 text-[#53645D]">
+    Based on your responses, your real estate portfolio may have significant
+    opportunities to reduce operating costs, improve net operating income
+    (NOI), and increase property value through targeted sustainability
+    initiatives.
+  </p>
+</div>
               <div className="rounded-[2rem] bg-[#ECFDF5] p-8">
                 <h3 className="text-lg font-bold">Estimated Annual Savings</h3>
                 <p className="mt-4 text-3xl font-bold text-[#3D6B4F]">

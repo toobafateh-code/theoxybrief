@@ -437,8 +437,183 @@ export default function RealEstateAssessmentPage() {
     );
   }
 
-  // Form UI remains unchanged below.
-  // Keep your existing form section and replace only the submit button with:
-  // (Use the button code from our previous message.)
-  return <></>;
+return (
+  <main className="min-h-screen bg-[#ECFDF5] px-6 py-24 text-[#10251E] md:px-16">
+    <section className="mx-auto max-w-5xl">
+      <div className="text-center">
+        <p className="text-lg font-bold uppercase tracking-[0.35em] text-[#3D6B4F]">
+          Real Estate ESG Value Assessment
+        </p>
+
+        <h1 className="mx-auto mt-5 max-w-5xl text-5xl font-bold leading-tight md:text-7xl">
+          Discover how sustainability can increase your property value.
+        </h1>
+
+        <p className="mx-auto mt-6 max-w-4xl text-xl leading-9 text-[#53645D]">
+          Answer 10 quick questions to identify opportunities to improve NOI,
+          attract premium tenants, and enhance asset valuation.
+        </p>
+      </div>
+
+      <form
+        onSubmit={handleSubmit}
+        className="mt-14 rounded-[2rem] bg-white p-10 shadow-sm md:p-14"
+      >
+        <div className="grid gap-8 md:grid-cols-2">
+          <div>
+            <label className="block text-sm font-bold uppercase tracking-[0.2em] text-[#3D6B4F]">
+              Full Name
+            </label>
+            <input
+              required
+              type="text"
+              value={form.fullName}
+              onChange={(e) => updateField("fullName", e.target.value)}
+              className="mt-3 w-full rounded-2xl border border-[#10251E]/15 bg-[#ECFDF5] px-5 py-4"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-bold uppercase tracking-[0.2em] text-[#3D6B4F]">
+              Company Name
+            </label>
+            <input
+              required
+              type="text"
+              value={form.company}
+              onChange={(e) => updateField("company", e.target.value)}
+              className="mt-3 w-full rounded-2xl border border-[#10251E]/15 bg-[#ECFDF5] px-5 py-4"
+            />
+          </div>
+
+          <div className="md:col-span-2">
+            <label className="block text-sm font-bold uppercase tracking-[0.2em] text-[#3D6B4F]">
+              Email Address
+            </label>
+            <input
+              required
+              type="email"
+              value={form.email}
+              onChange={(e) => updateField("email", e.target.value)}
+              className="mt-3 w-full rounded-2xl border border-[#10251E]/15 bg-[#ECFDF5] px-5 py-4"
+            />
+          </div>
+
+          <SelectField
+            label="1. What type of property do you manage?"
+            value={form.propertyType}
+            onChange={(value) => updateField("propertyType", value)}
+            options={[
+              "Office",
+              "Residential",
+              "Retail",
+              "Mixed Use",
+              "Industrial",
+              "Hospitality",
+            ]}
+          />
+
+          <SelectField
+            label="2. What is your portfolio size?"
+            value={form.portfolioSize}
+            onChange={(value) => updateField("portfolioSize", value)}
+            options={["Small", "Medium", "Large"]}
+          />
+
+          <SelectField
+            label="3. What is your largest operating cost?"
+            value={form.largestCost}
+            onChange={(value) => updateField("largestCost", value)}
+            options={[
+              "Energy",
+              "Water",
+              "Maintenance",
+              "Vacancy",
+              "Waste",
+            ]}
+          />
+
+          <SelectField
+            label="4. Do you track energy and water consumption?"
+            value={form.tracksUtilities}
+            onChange={(value) => updateField("tracksUtilities", value)}
+            options={["Yes", "Partially", "No"]}
+          />
+
+          <SelectField
+            label="5. What is your occupancy rate?"
+            value={form.occupancyRate}
+            onChange={(value) => updateField("occupancyRate", value)}
+            options={["Below 70%", "70%–85%", "Above 85%"]}
+          />
+
+          <SelectField
+            label="6. Do you hold green certifications?"
+            value={form.greenCertification}
+            onChange={(value) => updateField("greenCertification", value)}
+            options={["LEED", "BREEAM", "Estidama", "None"]}
+          />
+
+          <SelectField
+            label="7. Are tenants requesting sustainability features?"
+            value={form.tenantDemand}
+            onChange={(value) => updateField("tenantDemand", value)}
+            options={["Frequently", "Occasionally", "Rarely"]}
+          />
+
+          <SelectField
+            label="8. What is your primary objective?"
+            value={form.primaryObjective}
+            onChange={(value) => updateField("primaryObjective", value)}
+            options={[
+              "Reduce Operating Costs",
+              "Increase Asset Value",
+              "Attract Premium Tenants",
+              "Meet ESG Requirements",
+            ]}
+          />
+
+          <SelectField
+            label="9. What is your estimated budget?"
+            value={form.budget}
+            onChange={(value) => updateField("budget", value)}
+            options={[
+              "Under $10,000",
+              "$10,000–$50,000",
+              "$50,000–$250,000",
+              "$250,000+",
+            ]}
+          />
+
+          <SelectField
+            label="10. How soon do you want to begin?"
+            value={form.timeline}
+            onChange={(value) => updateField("timeline", value)}
+            options={[
+              "Immediately",
+              "Within 3 Months",
+              "Within 6 Months",
+              "Exploring Options",
+            ]}
+          />
+        </div>
+
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="mt-10 w-full rounded-full bg-[#10251E] px-8 py-4 font-semibold text-white hover:bg-[#1D3A30] disabled:cursor-not-allowed disabled:opacity-80"
+        >
+          {isSubmitting ? (
+            <span className="flex items-center justify-center gap-3">
+              <span className="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+              Generating Your Personalized OXY Brief...
+            </span>
+          ) : (
+            "Generate My Personalized OXY Brief"
+          )}
+        </button>
+      </form>
+    </section>
+  </main>
+);
 }

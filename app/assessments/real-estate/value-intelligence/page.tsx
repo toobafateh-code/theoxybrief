@@ -16,9 +16,7 @@ export default function RealEstateValueIntelligencePage() {
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       // Temporary success message
-      alert(
-        "Your Precise OXY Value Intelligence™ Report is ready. The full calculation engine will be connected next."
-      );
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (error) {
       console.error("Value Intelligence assessment failed:", error);
       alert("Something went wrong. Please try again.");

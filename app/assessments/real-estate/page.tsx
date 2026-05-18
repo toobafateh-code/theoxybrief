@@ -44,11 +44,51 @@ export default function RealEstateAssessmentPage() {
     }));
   }
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setSubmitted(true);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
+  async function handleSubmit(e: React.FormEvent) {
+  e.preventDefault();
+
+  const formData = new FormData();
+
+  // FormSubmit settings
+  formData.append("_subject", "New Real Estate ESG Assessment Submission");
+  formData.append("_captcha", "false");
+  formData.append("_template", "table");
+
+  // Contact details
+  formData.append("Full Name", form.fullName);
+  formData.append("Company", form.company);
+  formData.append("Email", form.email);
+
+  // Assessment answers
+  formData.append("Property Type", form.propertyType);
+  formData.append("Portfolio Size", form.portfolioSize);
+  formData.append("Largest Operating Cost", form.largestCost);
+  formData.append("Tracks Utilities", form.tracksUtilities);
+  formData.append("Occupancy Rate", form.occupancyRate);
+  formData.append("Green Certification", form.greenCertification);
+  formData.append("Tenant Demand", form.tenantDemand);
+  formData.append("Primary Objective", form.primaryObjective);
+  formData.append("Budget", form.budget);
+  formData.append("Timeline", form.timeline);
+
+  // Calculated outputs
+  formData.append("Estimated Annual Savings", results.savings);
+  formData.append("Potential NOI Improvement", results.noiIncrease);
+  formData.append(
+    "Potential Asset Value Increase",
+    results.assetValueIncrease
+  );
+
+  // Send email
+  await fetch("https://formsubmit.co/ajax/tooba@theoxybrief.com", {
+    method: "POST",
+    body: formData,
+  });
+
+  // Show results
+  setSubmitted(true);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
 
   const results = useMemo(() => {
     const savings =

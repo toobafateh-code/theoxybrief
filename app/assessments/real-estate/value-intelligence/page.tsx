@@ -336,6 +336,107 @@ export default function RealEstateValueIntelligencePage() {
   </div>
 </div>
 
+{/* Risk Intelligence Module */}
+<div className="mt-12">
+  <h2 className="text-3xl font-bold">Risk Intelligence Module</h2>
+
+  <p className="mt-4 text-lg leading-8 text-[#53645D]">
+    This assessment evaluates potential exposure to regulatory,
+    operational, and market risks that may affect future operating
+    performance, occupancy, and asset value.
+  </p>
+
+  <div className="mt-6 grid gap-6 md:grid-cols-2">
+    <MetricCard
+      title="Risk Exposure Score™"
+      value={`${results.riskExposureScore} / 100`}
+      subtitle="Measures potential exposure to transition, operational, and market risks."
+    />
+
+    <MetricCard
+      title="Risk Category"
+      value={results.riskCategory}
+      subtitle="Overall interpretation of your current risk profile."
+    />
+  </div>
+
+  <div className="mt-8 rounded-3xl bg-[#ECFDF5] p-6">
+    <h3 className="text-2xl font-bold">Interpretation</h3>
+    <p className="mt-3 text-lg leading-8 text-[#53645D]">
+      {results.riskInterpretation}
+    </p>
+  </div>
+</div>
+
+{/* Sustainable Finance Module */}
+<div className="mt-12">
+  <h2 className="text-3xl font-bold">Sustainable Finance Module</h2>
+
+  <p className="mt-4 text-lg leading-8 text-[#53645D]">
+    This module evaluates your portfolio’s readiness to attract green
+    financing, sustainability-linked loans, and responsible investment
+    capital.
+  </p>
+
+  <div className="mt-6 grid gap-6 md:grid-cols-2">
+    <MetricCard
+      title="Capital Readiness Score™"
+      value={`${results.capitalReadinessScore} / 100`}
+      subtitle="Measures alignment with sustainable finance expectations."
+    />
+
+    <MetricCard
+      title="Financing Readiness"
+      value={results.capitalReadinessCategory}
+      subtitle="Assessment of potential financing attractiveness."
+    />
+  </div>
+
+  <div className="mt-8 rounded-3xl bg-[#ECFDF5] p-6">
+    <h3 className="text-2xl font-bold">Interpretation</h3>
+    <p className="mt-3 text-lg leading-8 text-[#53645D]">
+      {results.capitalReadinessInterpretation}
+    </p>
+  </div>
+</div>
+
+{/* Carbon Intelligence Module */}
+<div className="mt-12">
+  <h2 className="text-3xl font-bold">Carbon Intelligence Module</h2>
+
+  <p className="mt-4 text-lg leading-8 text-[#53645D]">
+    This module estimates the potential reduction in greenhouse gas
+    emissions associated with projected energy efficiency improvements.
+  </p>
+
+  <div className="mt-6 grid gap-6 md:grid-cols-3">
+    <MetricCard
+      title="Estimated CO₂ Reduction"
+      value={`${results.co2Reduction.toFixed(1)} tCO₂e`}
+      subtitle="Estimated annual greenhouse gas reduction."
+    />
+
+    <MetricCard
+      title="Carbon Impact Score™"
+      value={`${results.carbonImpactScore} / 100`}
+      subtitle="Measures the climate impact potential of the identified initiatives."
+    />
+
+    <MetricCard
+      title="Net Zero Alignment"
+      value={results.netZeroAlignment}
+      subtitle="Assessment of climate transition contribution."
+    />
+  </div>
+
+  <div className="mt-8 rounded-3xl bg-[#ECFDF5] p-6">
+    <h3 className="text-2xl font-bold">Interpretation</h3>
+    <p className="mt-3 text-lg leading-8 text-[#53645D]">
+      {results.carbonInterpretation}
+    </p>
+  </div>
+</div>
+
             {/* Recommended Next Steps */}
             <div className="mt-12 rounded-[2rem] bg-[#ECFDF5] p-8">
               <h2 className="text-3xl font-bold">

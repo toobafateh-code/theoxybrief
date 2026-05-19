@@ -477,53 +477,210 @@ export default function RealEstateValueIntelligencePage() {
             />
 
                         {/* Scenario Analysis */}
-            <div className="mt-12">
-              <h2 className="text-3xl font-bold">
-                Scenario Analysis
-              </h2>
+            {/* Scenario Analysis */}
+<div className="mt-12">
+  <h2 className="text-3xl font-bold">Scenario Analysis</h2>
 
-              <div className="mt-6 grid gap-6 md:grid-cols-3">
-                <MetricCard
-                  title="Conservative Case"
-                  value={formatCurrency(
-                    results.conservativeSavings
-                  )}
-                  subtitle="80% of the base case estimate."
-                />
-                <MetricCard
-                  title="Base Case"
-                  value={formatCurrency(
-                    results.totalAnnualSavings
-                  )}
-                  subtitle="Expected outcome using benchmark assumptions."
-                />
-                <MetricCard
-                  title="Accelerated Case"
-                  value={formatCurrency(
-                    results.acceleratedSavings
-                  )}
-                  subtitle="130% of the base case estimate."
-                />
-              </div>
-            </div>
+  <p className="mt-4 text-lg leading-8 text-[#53645D]">
+    The following scenarios illustrate how annual savings may vary under
+    conservative, base case, and accelerated implementation assumptions.
+  </p>
 
-            {/* Risk Intelligence */}
-            <Section
-              title="Risk Intelligence Module"
-              content={`${results.riskCategory} risk profile. ${results.riskInterpretation}`}
-            />
+  <div className="mt-6 grid gap-6 md:grid-cols-3">
+    <MetricCard
+      title="Conservative Case"
+      value={formatCurrency(results.conservativeSavings)}
+      subtitle="80% of the base case estimate."
+    />
 
-            {/* Sustainable Finance */}
-            <Section
-              title="Sustainable Finance Module"
-              content={`${results.capitalReadinessCategory} capital readiness. ${results.capitalReadinessInterpretation}`}
-            />
+    <MetricCard
+      title="Base Case"
+      value={formatCurrency(results.totalAnnualSavings)}
+      subtitle="Expected outcome using benchmark assumptions."
+    />
 
-            {/* Carbon Intelligence */}
-            <Section
-              title="Carbon Intelligence Module"
-              content={`${results.carbonInterpretation} Net Zero Alignment: ${results.netZeroAlignment}.`}
-            />
+    <MetricCard
+      title="Accelerated Case"
+      value={formatCurrency(results.acceleratedSavings)}
+      subtitle="130% of the base case estimate."
+    />
+  </div>
+
+  {/* Scenario Interpretations */}
+  <div className="mt-8 space-y-6">
+    <div className="rounded-3xl bg-[#ECFDF5] p-6">
+      <h3 className="text-2xl font-bold">
+        Conservative Case Interpretation
+      </h3>
+      <p className="mt-3 text-lg leading-8 text-[#53645D]">
+        This downside scenario assumes only 80% of projected savings are
+        achieved. It reflects situations where initiatives are partially
+        implemented, operational constraints reduce effectiveness, or
+        actual performance is lower than expected.
+      </p>
+    </div>
+
+    <div className="rounded-3xl bg-[#ECFDF5] p-6">
+      <h3 className="text-2xl font-bold">
+        Base Case Interpretation
+      </h3>
+      <p className="mt-3 text-lg leading-8 text-[#53645D]">
+        This represents the most likely outcome using benchmark
+        assumptions derived from commonly observed building optimization
+        programs. It assumes recommended initiatives are implemented
+        effectively and perform as expected.
+      </p>
+    </div>
+
+    <div className="rounded-3xl bg-[#ECFDF5] p-6">
+      <h3 className="text-2xl font-bold">
+        Accelerated Case Interpretation
+      </h3>
+      <p className="mt-3 text-lg leading-8 text-[#53645D]">
+        This upside scenario assumes results exceed baseline
+        expectations, reflecting strong execution, broader
+        implementation, and additional operational and market benefits
+        such as improved tenant demand and enhanced asset performance.
+      </p>
+    </div>
+  </div>
+</div>
+
+{/* Risk Intelligence Module */}
+<div className="mt-12">
+  <h2 className="text-3xl font-bold">Risk Intelligence Module</h2>
+
+  <p className="mt-4 text-lg leading-8 text-[#53645D]">
+    This assessment evaluates potential exposure to regulatory,
+    operational, and market risks that may affect future operating
+    performance, occupancy, and asset value.
+  </p>
+
+  <div className="mt-6 grid gap-6 md:grid-cols-2">
+    <MetricCard
+      title="Risk Exposure Score™"
+      value={`${results.riskExposureScore} / 100`}
+      subtitle="Measures potential exposure to transition, operational, and market risks."
+    />
+
+    <MetricCard
+      title="Risk Category"
+      value={results.riskCategory}
+      subtitle="Overall interpretation of your current risk profile."
+    />
+  </div>
+
+  <div className="mt-8 rounded-3xl bg-[#ECFDF5] p-6">
+    <h3 className="text-2xl font-bold">Interpretation</h3>
+    <p className="mt-3 text-lg leading-8 text-[#53645D]">
+      {results.riskInterpretation}
+    </p>
+  </div>
+
+  <div className="mt-6 rounded-3xl bg-[#ECFDF5] p-6">
+    <h3 className="text-2xl font-bold">Strategic Implications</h3>
+    <p className="mt-3 text-lg leading-8 text-[#53645D]">
+      Reducing sustainability-related risks can help protect occupancy,
+      reduce future compliance costs, improve insurability, and preserve
+      long-term asset value.
+    </p>
+  </div>
+</div>
+
+{/* Sustainable Finance Module */}
+<div className="mt-12">
+  <h2 className="text-3xl font-bold">Sustainable Finance Module</h2>
+
+  <p className="mt-4 text-lg leading-8 text-[#53645D]">
+    This module evaluates your portfolio’s readiness to attract green
+    financing, sustainability-linked loans, and responsible investment
+    capital.
+  </p>
+
+  <div className="mt-6 grid gap-6 md:grid-cols-2">
+    <MetricCard
+      title="Capital Readiness Score™"
+      value={`${results.capitalReadinessScore} / 100`}
+      subtitle="Measures alignment with sustainable finance expectations."
+    />
+
+    <MetricCard
+      title="Financing Readiness"
+      value={results.capitalReadinessCategory}
+      subtitle="Assessment of potential financing attractiveness."
+    />
+  </div>
+
+  <div className="mt-8 rounded-3xl bg-[#ECFDF5] p-6">
+    <h3 className="text-2xl font-bold">Interpretation</h3>
+    <p className="mt-3 text-lg leading-8 text-[#53645D]">
+      {results.capitalReadinessInterpretation}
+    </p>
+  </div>
+
+  <div className="mt-6 rounded-3xl bg-[#ECFDF5] p-6">
+    <h3 className="text-2xl font-bold">Financing Opportunities</h3>
+    <p className="mt-3 text-lg leading-8 text-[#53645D]">
+      Potential opportunities may include green loans,
+      sustainability-linked financing, preferential lending terms, and
+      improved positioning with ESG-focused investors.
+    </p>
+  </div>
+
+  <div className="mt-6 rounded-3xl bg-[#ECFDF5] p-6">
+    <h3 className="text-2xl font-bold">Investor Positioning</h3>
+    <p className="mt-3 text-lg leading-8 text-[#53645D]">
+      Strong sustainability performance can enhance credibility with
+      institutional investors and increase access to responsible capital.
+    </p>
+  </div>
+</div>
+
+{/* Carbon Intelligence Module */}
+<div className="mt-12">
+  <h2 className="text-3xl font-bold">Carbon Intelligence Module</h2>
+
+  <p className="mt-4 text-lg leading-8 text-[#53645D]">
+    This module estimates the potential reduction in greenhouse gas
+    emissions associated with projected energy efficiency improvements.
+  </p>
+
+  <div className="mt-6 grid gap-6 md:grid-cols-3">
+    <MetricCard
+      title="Estimated CO₂ Reduction"
+      value={`${results.co2Reduction.toFixed(1)} tCO₂e`}
+      subtitle="Estimated annual greenhouse gas reduction."
+    />
+
+    <MetricCard
+      title="Carbon Impact Score™"
+      value={`${results.carbonImpactScore} / 100`}
+      subtitle="Measures the climate impact potential of the identified initiatives."
+    />
+
+    <MetricCard
+      title="Net Zero Alignment"
+      value={results.netZeroAlignment}
+      subtitle="Assessment of climate transition contribution."
+    />
+  </div>
+
+  <div className="mt-8 rounded-3xl bg-[#ECFDF5] p-6">
+    <h3 className="text-2xl font-bold">Interpretation</h3>
+    <p className="mt-3 text-lg leading-8 text-[#53645D]">
+      {results.carbonInterpretation}
+    </p>
+  </div>
+
+  <div className="mt-6 rounded-3xl bg-[#ECFDF5] p-6">
+    <h3 className="text-2xl font-bold">Net-Zero Alignment Commentary</h3>
+    <p className="mt-3 text-lg leading-8 text-[#53645D]">
+      These projected emissions reductions support climate transition
+      objectives and may strengthen alignment with net-zero commitments
+      and disclosure frameworks.
+    </p>
+  </div>
+</div>
 
             {/* Advanced Financial Calculations */}
             <div className="mt-12 grid gap-6 md:grid-cols-2">

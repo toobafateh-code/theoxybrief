@@ -274,43 +274,67 @@ export default function RealEstateValueIntelligencePage() {
             />
 
             {/* Scenario Analysis */}
-            <div className="mt-12">
-              <h2 className="text-3xl font-bold">
-                Scenario Analysis
-              </h2>
+<div className="mt-12">
+  <h2 className="text-3xl font-bold">Scenario Analysis</h2>
 
-              <p className="mt-4 text-lg leading-8 text-[#53645D]">
-                The following scenarios illustrate how annual savings
-                may vary under conservative, base case, and accelerated
-                implementation assumptions.
-              </p>
+  <p className="mt-4 text-lg leading-8 text-[#53645D]">
+    The following scenarios illustrate how annual savings may vary under
+    conservative, base case, and accelerated implementation assumptions.
+  </p>
 
-              <div className="mt-6 grid gap-6 md:grid-cols-3">
-                <MetricCard
-                  title="Conservative Case"
-                  value={formatCurrency(
-                    results.conservativeSavings
-                  )}
-                  subtitle="80% of the base case estimate."
-                />
+  <div className="mt-6 grid gap-6 md:grid-cols-3">
+    <MetricCard
+      title="Conservative Case"
+      value={formatCurrency(results.conservativeSavings)}
+      subtitle="80% of the base case estimate."
+    />
 
-                <MetricCard
-                  title="Base Case"
-                  value={formatCurrency(
-                    results.totalAnnualSavings
-                  )}
-                  subtitle="Expected outcome using benchmark assumptions."
-                />
+    <MetricCard
+      title="Base Case"
+      value={formatCurrency(results.totalAnnualSavings)}
+      subtitle="Expected outcome using benchmark assumptions."
+    />
 
-                <MetricCard
-                  title="Accelerated Case"
-                  value={formatCurrency(
-                    results.acceleratedSavings
-                  )}
-                  subtitle="130% of the base case estimate."
-                />
-              </div>
-            </div>
+    <MetricCard
+      title="Accelerated Case"
+      value={formatCurrency(results.acceleratedSavings)}
+      subtitle="130% of the base case estimate."
+    />
+  </div>
+
+  {/* Scenario Interpretations */}
+  <div className="mt-8 space-y-6">
+    <div className="rounded-3xl bg-[#ECFDF5] p-6">
+      <h3 className="text-2xl font-bold">Conservative Case Interpretation</h3>
+      <p className="mt-3 text-lg leading-8 text-[#53645D]">
+        This downside scenario assumes only 80% of projected savings are
+        achieved. It reflects situations where initiatives are partially
+        implemented, operational constraints reduce effectiveness, or actual
+        performance is lower than expected.
+      </p>
+    </div>
+
+    <div className="rounded-3xl bg-[#ECFDF5] p-6">
+      <h3 className="text-2xl font-bold">Base Case Interpretation</h3>
+      <p className="mt-3 text-lg leading-8 text-[#53645D]">
+        This represents the most likely outcome using benchmark assumptions
+        derived from commonly observed building optimization programs. It
+        assumes recommended initiatives are implemented effectively and
+        perform as expected.
+      </p>
+    </div>
+
+    <div className="rounded-3xl bg-[#ECFDF5] p-6">
+      <h3 className="text-2xl font-bold">Accelerated Case Interpretation</h3>
+      <p className="mt-3 text-lg leading-8 text-[#53645D]">
+        This upside scenario assumes results exceed baseline expectations,
+        reflecting strong execution, broader implementation, and additional
+        operational and market benefits such as improved tenant demand and
+        enhanced asset performance.
+      </p>
+    </div>
+  </div>
+</div>
 
             {/* Recommended Next Steps */}
             <div className="mt-12 rounded-[2rem] bg-[#ECFDF5] p-8">

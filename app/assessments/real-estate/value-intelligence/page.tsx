@@ -152,6 +152,77 @@ export default function RealEstateValueIntelligencePage() {
       // Scenario analysis
       conservativeSavings,
       acceleratedSavings,
+
+      // Risk Intelligence Module
+riskExposureScore: Math.min(
+  100,
+  Math.round(
+    40 +
+      (Number(form.occupancyRate) < 90 ? 15 : 5) +
+      (results?.roi && results.roi < 15 ? 15 : 5)
+  )
+),
+
+riskCategory:
+  Number(form.occupancyRate) < 85
+    ? "Elevated"
+    : Number(form.occupancyRate) < 90
+    ? "Moderate"
+    : "Managed",
+
+riskInterpretation:
+  Number(form.occupancyRate) < 85
+    ? "Your portfolio exhibits elevated exposure to operational and market risks, including potential occupancy pressure and regulatory requirements."
+    : Number(form.occupancyRate) < 90
+    ? "Your portfolio exhibits moderate transition and operational risk. Early sustainability investments may reduce future compliance and occupancy pressures."
+    : "Your portfolio appears relatively well positioned, though continued sustainability improvements can further strengthen resilience.",
+
+// Sustainable Finance Module
+capitalReadinessScore: Math.min(
+  100,
+  Math.round(
+    50 +
+      (form.primaryObjective === "Increase Asset Value" ? 15 : 5) +
+      (results?.oxyValueScore && results.oxyValueScore > 80 ? 20 : 10)
+  )
+),
+
+capitalReadinessCategory:
+  (results?.oxyValueScore || 0) >= 80
+    ? "Strong"
+    : (results?.oxyValueScore || 0) >= 60
+    ? "Developing"
+    : "Emerging",
+
+capitalReadinessInterpretation:
+  (results?.oxyValueScore || 0) >= 80
+    ? "Your portfolio demonstrates strong potential to attract sustainability-linked financing and responsible investment capital."
+    : (results?.oxyValueScore || 0) >= 60
+    ? "Your portfolio shows developing readiness for sustainable finance opportunities."
+    : "Additional ESG planning and performance improvements may strengthen financing attractiveness.",
+
+// Carbon Intelligence Module
+co2Reduction: (energySavings / 1000) * 2.5,
+
+carbonImpactScore: Math.min(
+  100,
+  Math.round(((energySavings / 1000) * 2.5) * 0.8)
+),
+
+netZeroAlignment:
+  (energySavings / 1000) * 2.5 > 100
+    ? "High"
+    : (energySavings / 1000) * 2.5 > 50
+    ? "Moderate"
+    : "Emerging",
+
+carbonInterpretation:
+  `Estimated energy efficiency measures may reduce emissions by approximately ${(
+    (energySavings / 1000) *
+    2.5
+  ).toFixed(
+    1
+  )} tCO₂e annually, supporting climate targets and net-zero ambitions.`,
     };
   }, [form]);
 

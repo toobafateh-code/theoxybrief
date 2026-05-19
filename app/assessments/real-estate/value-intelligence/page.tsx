@@ -697,35 +697,65 @@ export default function RealEstateValueIntelligencePage() {
             </div>
 
             {/* Sensitivity Analysis */}
-            <div className="mt-12">
-              <h2 className="text-3xl font-bold">
-                Sensitivity Analysis
-              </h2>
+            {/* Sensitivity Analysis */}
+<div className="mt-12">
+  <h2 className="text-3xl font-bold">Sensitivity Analysis</h2>
 
-              <div className="mt-6 grid gap-6 md:grid-cols-3">
-                <MetricCard
-                  title="Low Case"
-                  value={formatCurrency(
-                    results.lowCaseAssetValue
-                  )}
-                  subtitle="10% below base savings."
-                />
-                <MetricCard
-                  title="Base Case"
-                  value={formatCurrency(
-                    results.assetValueIncrease
-                  )}
-                  subtitle="Expected outcome."
-                />
-                <MetricCard
-                  title="High Case"
-                  value={formatCurrency(
-                    results.highCaseAssetValue
-                  )}
-                  subtitle="10% above base savings."
-                />
-              </div>
-            </div>
+  <p className="mt-4 text-lg leading-8 text-[#53645D]">
+    This analysis illustrates how projected asset value may change if
+    actual savings are 10% below or above the base case estimate.
+  </p>
+
+  <div className="mt-6 grid gap-6 md:grid-cols-3">
+    <MetricCard
+      title="Low Case"
+      value={formatCurrency(results.lowCaseAssetValue)}
+      subtitle="10% below base savings."
+    />
+
+    <MetricCard
+      title="Base Case"
+      value={formatCurrency(results.assetValueIncrease)}
+      subtitle="Expected outcome."
+    />
+
+    <MetricCard
+      title="High Case"
+      value={formatCurrency(results.highCaseAssetValue)}
+      subtitle="10% above base savings."
+    />
+  </div>
+
+  {/* Sensitivity Analysis Interpretations */}
+  <div className="mt-8 space-y-6">
+    <div className="rounded-3xl bg-[#ECFDF5] p-6">
+      <h3 className="text-2xl font-bold">Low Case Interpretation</h3>
+      <p className="mt-3 text-lg leading-8 text-[#53645D]">
+        This downside case assumes realized savings are 10% lower than
+        projected. It reflects the potential impact of implementation
+        delays, lower-than-expected performance, or operational
+        constraints.
+      </p>
+    </div>
+
+    <div className="rounded-3xl bg-[#ECFDF5] p-6">
+      <h3 className="text-2xl font-bold">Base Case Interpretation</h3>
+      <p className="mt-3 text-lg leading-8 text-[#53645D]">
+        This represents the most likely outcome using benchmark
+        assumptions and standard implementation performance.
+      </p>
+    </div>
+
+    <div className="rounded-3xl bg-[#ECFDF5] p-6">
+      <h3 className="text-2xl font-bold">High Case Interpretation</h3>
+      <p className="mt-3 text-lg leading-8 text-[#53645D]">
+        This upside case assumes realized savings are 10% higher than
+        projected, reflecting strong execution, enhanced operational
+        performance, and additional market benefits.
+      </p>
+    </div>
+  </div>
+</div>
 
             {/* Opportunity Prioritization Matrix */}
             <div className="mt-12">

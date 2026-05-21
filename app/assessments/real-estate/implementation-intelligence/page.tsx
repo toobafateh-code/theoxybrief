@@ -291,6 +291,31 @@ export default function ImplementationIntelligencePage() {
             </div>
           </div>
 
+{/* OXY Implementation Intelligence CTA */}
+<div className="mt-12 rounded-[2rem] bg-[#10251E] px-8 py-12 text-center text-white">
+  <p className="text-lg font-bold uppercase tracking-[0.35em] text-[#9AC7B0]">
+    OXY Implementation Intelligence™
+  </p>
+
+  <h2 className="mt-4 text-3xl font-bold md:text-4xl">
+    Ready to Implement the Identified Opportunities?
+  </h2>
+
+  <p className="mx-auto mt-4 max-w-3xl text-lg leading-8 text-white/80">
+    Generate a detailed ESG implementation roadmap including
+    investment allocation, timelines, governance structures,
+    KPI monitoring, financing opportunities, and value
+    realization planning.
+  </p>
+
+  <a
+    href="/assessments/real-estate/implementation-intelligence"
+    className="mt-8 inline-block rounded-full bg-white px-8 py-4 font-semibold text-[#10251E] hover:bg-[#ECFDF5]"
+  >
+    Build My OXY Implementation Intelligence™ Roadmap
+  </a>
+</div>
+
                     {/* Strategic Advisory CTA */}
           <div className="mt-12 rounded-[2rem] bg-[#10251E] px-8 py-12 text-center text-white">
             <p className="text-lg font-bold uppercase tracking-[0.35em] text-[#9AC7B0]">

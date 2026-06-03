@@ -28,6 +28,7 @@ const [submitted, setSubmitted] = useState(false);
 const accessRestricted = true;
 const [username, setUsername] = useState("");
 const [password, setPassword] = useState("");
+const [showPassword, setShowPassword] = useState(false);
 const [isAuthorized, setIsAuthorized] = useState(false);
 
 const ADMIN_USERNAME = "tooba";
@@ -791,13 +792,23 @@ if (accessRestricted && !isAuthorized) {
       className="mt-8 w-full rounded-xl border border-[#10251E]/15 p-4"
     />
 
-    <input
-      type="password"
-      placeholder="Password"
-      value={password}
-      onChange={(e) => setPassword(e.target.value)}
-      className="mt-4 w-full rounded-xl border border-[#10251E]/15 p-4"
-    />
+    <div className="relative mt-4">
+  <input
+    type={showPassword ? "text" : "password"}
+    placeholder="Password"
+    value={password}
+    onChange={(e) => setPassword(e.target.value)}
+    className="w-full rounded-xl border border-[#10251E]/15 p-4 pr-12"
+  />
+
+  <button
+    type="button"
+    onClick={() => setShowPassword(!showPassword)}
+    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#53645D]"
+  >
+    {showPassword ? "Hide" : "Show"}
+  </button>
+</div>
 
     <button
       onClick={() => {

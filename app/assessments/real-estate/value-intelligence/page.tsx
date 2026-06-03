@@ -761,10 +761,6 @@ try {
 // REPORT VIEW
 // =====================================================
 
-// =====================================================
-// REPORT VIEW
-// =====================================================
-
 if (accessRestricted && !isAdmin) {
   return (
     <main className="min-h-screen bg-[#ECFDF5] px-6 py-24">
@@ -774,35 +770,15 @@ if (accessRestricted && !isAdmin) {
           OXY VALUE INTELLIGENCE™
         </p>
 
-        <h1 className="mt-6 text-5xl font-bold text-[#10251E] md:text-7xl">
-          Access By Engagement
-        </h1>
+       <h1 className="mt-6 text-5xl font-bold text-[#10251E] md:text-7xl">
+  Private Client Access
+</h1>
 
-        <p className="mx-auto mt-8 max-w-3xl text-xl leading-9 text-[#53645D]">
-          OXY Value Intelligence™ is available through a guided
-          advisory engagement to ensure data quality, strategic
-          alignment, and actionable recommendations.
-        </p>
-
-        <div className="mt-12 rounded-[2rem] bg-white p-10 text-left shadow-sm">
-
-          <h2 className="text-3xl font-bold">
-            Included In The Engagement
-          </h2>
-
-          <ul className="mt-8 space-y-4 text-lg">
-            <li>✓ OXY Value Score™</li>
-            <li>✓ Risk Intelligence™</li>
-            <li>✓ Carbon Intelligence™</li>
-            <li>✓ Capital Strategy Intelligence™</li>
-            <li>✓ Scenario Analysis</li>
-            <li>✓ Sensitivity Analysis</li>
-            <li>✓ Investor Positioning Intelligence</li>
-            <li>✓ Financing Pathway Recommendations</li>
-            <li>✓ Implementation Roadmap</li>
-          </ul>
-
-        </div>
+       <p className="mx-auto mt-8 max-w-3xl text-xl leading-9 text-[#53645D]">
+  OXY Value Intelligence™ is a proprietary advisory platform
+  available through approved client engagements and
+  strategic advisory mandates.
+</p>
 
         <div className="mt-12 rounded-[2rem] bg-[#10251E] p-12 text-white">
 

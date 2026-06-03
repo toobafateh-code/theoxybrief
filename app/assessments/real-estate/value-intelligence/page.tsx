@@ -370,6 +370,31 @@ const capitalReadinessInterpretation =
     : "Additional operational improvements may strengthen financing readiness and investor attractiveness.";
 
 // =====================================================
+// Financing Readiness Score™
+// =====================================================
+
+const financingReadinessScore = Math.min(
+  100,
+  Math.round(
+    capitalReadinessScore * 0.4 +
+    Math.min(roi, 25) * 2 +
+    Math.max(0, 10 - paybackYears) * 3
+  )
+);
+
+let financingReadinessCategory = "";
+
+if (financingReadinessScore >= 80) {
+  financingReadinessCategory = "Institutional Ready";
+} else if (financingReadinessScore >= 60) {
+  financingReadinessCategory = "Financing Ready";
+} else if (financingReadinessScore >= 40) {
+  financingReadinessCategory = "Developing";
+} else {
+  financingReadinessCategory = "Early Stage";
+}
+
+// =====================================================
 // Financing Attractiveness
 // =====================================================
 
@@ -688,16 +713,20 @@ return {
   riskCategory,
   riskInterpretation,
 
-  // Sustainable Finance
-  capitalReadinessScore,
-  capitalReadinessCategory,
-  capitalReadinessInterpretation,
-  normalizedFinancingScore,
-  financingCategory,
-  financingNarrative,
-  financingStructures,
-  investorPositioning,
-  financingActions,
+ // Sustainable Finance
+capitalReadinessScore,
+capitalReadinessCategory,
+capitalReadinessInterpretation,
+
+financingReadinessScore,
+financingReadinessCategory,
+
+normalizedFinancingScore,
+financingCategory,
+financingNarrative,
+financingStructures,
+investorPositioning,
+financingActions,
 
   // Carbon Intelligence
   co2Reduction,
@@ -1103,19 +1132,39 @@ return ( <main className="min-h-screen bg-[#ECFDF5] px-6 py-24 text-[#10251E] md
 
           </div>
 
-          {/* Financing Narrative */}
+          {/* Capital Strategy Intelligence™ */}
 
-          <div className="mt-8 rounded-3xl bg-[#ECFDF5] p-6">
+<div className="mt-8 rounded-3xl bg-[#ECFDF5] p-6">
 
-            <h3 className="text-2xl font-bold">
-              Financing Intelligence
-            </h3>
+  <h3 className="text-2xl font-bold">
+    Capital Strategy Intelligence™
+  </h3>
 
-            <p className="mt-3 text-lg leading-8 text-[#53645D]">
-              {results.financingNarrative}
-            </p>
+  <div className="mt-6 rounded-2xl bg-white p-6">
+    <p className="text-sm font-bold uppercase tracking-[0.2em] text-[#3D6B4F]">
+      Financing Readiness Score™
+    </p>
 
-          </div>
+    <p className="mt-3 text-5xl font-bold text-[#10251E]">
+      {results.financingReadinessScore}/100
+    </p>
+
+    <p className="mt-3 text-lg font-semibold text-[#3D6B4F]">
+      {results.financingReadinessCategory}
+    </p>
+  </div>
+
+  <div className="mt-6 rounded-2xl bg-white p-6">
+    <h4 className="text-xl font-bold">
+      Financing Intelligence
+    </h4>
+
+    <p className="mt-3 text-lg leading-8 text-[#53645D]">
+      {results.financingNarrative}
+    </p>
+  </div>
+
+</div>
 
           {/* Financing Structures */}
 

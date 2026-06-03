@@ -26,9 +26,12 @@ export default function RealEstateValueIntelligencePage() {
 const [isSubmitting, setIsSubmitting] = useState(false);
 const [submitted, setSubmitted] = useState(false);
 const accessRestricted = true;
-const isAdmin =
-  typeof window !== "undefined" &&
-  window.location.search.includes("admin=oxy2026");
+const [username, setUsername] = useState("");
+const [password, setPassword] = useState("");
+const [isAuthorized, setIsAuthorized] = useState(false);
+
+const ADMIN_USERNAME = "tooba";
+const ADMIN_PASSWORD = "OXY_2026_FOUNDER!";
 
 const [form, setForm] = useState<FormData>({
 portfolioArea: "",
@@ -761,50 +764,67 @@ try {
 // REPORT VIEW
 // =====================================================
 
-if (accessRestricted && !isAdmin) {
+if (accessRestricted && !isAuthorized) {
   return (
     <main className="min-h-screen bg-[#ECFDF5] px-6 py-24">
-      <section className="mx-auto max-w-5xl text-center">
+<section className="mx-auto max-w-xl">
 
-        <p className="text-lg font-bold uppercase tracking-[0.35em] text-[#3D6B4F]">
-          OXY VALUE INTELLIGENCE™
-        </p>
+  <div className="rounded-[2rem] bg-white p-10 shadow-sm">
 
-       <h1 className="mt-6 text-5xl font-bold text-[#10251E] md:text-7xl">
-  Private Client Access
-</h1>
+    <p className="text-center text-sm font-bold uppercase tracking-[0.3em] text-[#3D6B4F]">
+      OXY VALUE INTELLIGENCE™
+    </p>
 
-       <p className="mx-auto mt-8 max-w-3xl text-xl leading-9 text-[#53645D]">
-  OXY Value Intelligence™ is a proprietary advisory platform
-  available through approved client engagements and
-  strategic advisory mandates.
-</p>
+    <h1 className="mt-6 text-center text-4xl font-bold text-[#10251E]">
+      Private Client Access
+    </h1>
 
-        <div className="mt-12 rounded-[2rem] bg-[#10251E] p-12 text-white">
+    <p className="mt-4 text-center text-[#53645D]">
+      Login required to access this proprietary platform.
+    </p>
 
-          <p className="text-sm font-bold uppercase tracking-[0.3em]">
-            PROPRIETARY METHODOLOGY
-          </p>
+    <input
+      type="text"
+      placeholder="Username"
+      value={username}
+      onChange={(e) => setUsername(e.target.value)}
+      className="mt-8 w-full rounded-xl border border-[#10251E]/15 p-4"
+    />
 
-          <h2 className="mt-4 text-4xl font-bold">
-            Request a Custom Quote
-          </h2>
+    <input
+      type="password"
+      placeholder="Password"
+      value={password}
+      onChange={(e) => setPassword(e.target.value)}
+      className="mt-4 w-full rounded-xl border border-[#10251E]/15 p-4"
+    />
 
-          <p className="mx-auto mt-6 max-w-3xl text-lg text-white/80">
-            Access to OXY Value Intelligence™ is currently
-            provided through a tailored advisory engagement.
-          </p>
+    <button
+      onClick={() => {
+        if (
+          username === ADMIN_USERNAME &&
+          password === ADMIN_PASSWORD
+        ) {
+          setIsAuthorized(true);
+        } else {
+          alert("Invalid credentials");
+        }
+      }}
+      className="mt-6 w-full rounded-full bg-[#10251E] px-6 py-4 font-semibold text-white"
+    >
+      Login
+    </button>
 
-          <a
-            href="/contact"
-            className="mt-8 inline-block rounded-full bg-white px-8 py-4 font-semibold text-[#10251E]"
-          >
-            Request a Quote
-          </a>
+    <a
+      href="/contact"
+      className="mt-6 block text-center text-[#3D6B4F] underline"
+    >
+      Request a Quote
+    </a>
 
-        </div>
+  </div>
 
-      </section>
+</section>
     </main>
   );
 }

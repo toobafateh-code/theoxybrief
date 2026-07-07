@@ -12,10 +12,39 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata = {
+export const metadata: Metadata = {
+  metadataBase: new URL("https://www.theoxybrief.com"),
+
   title: "The OXY Brief",
+
   description:
     "The OXY Brief translates sustainability into financial performance through ESG advisory, OXY 60, OXY Explains, and The OXY Model.",
+
+  alternates: {
+    canonical: "/",
+  },
+
+  openGraph: {
+    title: "The OXY Brief",
+    description:
+      "Translating sustainability into financial performance.",
+    url: "https://www.theoxybrief.com",
+    siteName: "The OXY Brief",
+    locale: "en_US",
+    type: "website",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "The OXY Brief",
+    description:
+      "Translating sustainability into financial performance.",
+  },
+
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({

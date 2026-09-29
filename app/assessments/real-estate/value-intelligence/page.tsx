@@ -2,70 +2,57 @@
 
 import { useEffect, useMemo, useState } from "react";
 
+type PreliminaryContext = {
+  fullName: string;
+  company: string;
+  email: string;
+  propertyType: string;
+  portfolioSize: string;
+  largestCost: string;
+  tracksUtilities: string;
+  occupancyRate: string;
+  greenCertification: string;
+  tenantDemand: string;
+  primaryObjective: string;
+  budget: string;
+  timeline: string;
+};
+
 type FormData = {
   currency: "AED" | "USD";
-  propertyType: string;
+
   portfolioArea: string;
   numberOfProperties: string;
 
   annualEnergyCost: string;
   annualEnergyConsumption: string;
-  energySavingsRate: string;
 
   annualWaterCost: string;
   annualWaterConsumption: string;
-  waterSavingsRate: string;
 
   annualMaintenanceCost: string;
-  maintenanceSavingsRate: string;
 
   currentNOI: string;
   capRate: string;
-  occupancyRate: string;
+  exactOccupancyRate: string;
 
   esgInvestment: string;
   investmentHorizon: string;
   discountRate: string;
 
   carbonEmissionFactor: string;
-  certification: string;
-  primaryObjective: string;
 
   scenario: "Conservative" | "Base" | "Upside";
   dataConfidence: "Low" | "Moderate" | "High";
 };
 
-type ClientContext = {
-  fullName: string;
-  company: string;
-  email: string;
-};
-
-type OpportunityItem = {
-  initiative: string;
-  impact: string;
-  payback: string;
-  priority: string;
-};
+const CLIENT_CONTEXT_KEY = "oxyRealEstateAssessmentClient";
 
 const FORM_SUBMIT_ENDPOINT =
   "https://formsubmit.co/ajax/tooba@theoxybrief.com";
 
 const ADMIN_USERNAME = "tooba";
 const ADMIN_PASSWORD = "OXY_2026_FOUNDER!";
-
-const CLIENT_CONTEXT_KEY = "oxyRealEstateAssessmentClient";
-
-const SOURCES = {
-  dewaHandbook:
-    "https://dewa.gov.ae/-/media/Files/Handbooks2025/Energy-Conservation-Handbook_2025_2_EN.ashx",
-  dewaDSM:
-    "https://www.dewa.gov.ae/en/about-us/media-publications/latest-news/2024/07/hh-sheikh-ahmed-bin-saeed-al-maktoum-issues",
-  rics:
-    "https://www.rics.org/profession-standards/rics-standards-and-guidance/sector-standards/valuation-standards/esg-and-sustainability-in-commercial-property-valuation",
-  energyStar:
-    "https://www.energystar.gov/buildings/benchmark/understand-metrics/what-eui",
-};
 
 const SCENARIOS = {
   Conservative: {
@@ -85,49 +72,41 @@ const SCENARIOS = {
   },
 };
 
-export default function RealEstateValueIntelligencePage() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+export default function ValueIntelligencePage() {
+  const [authorized, setAuthorized] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [isAuthorized, setIsAuthorized] = useState(false);
 
-  const [client, setClient] = useState<ClientContext>({
-    fullName: "",
-    company: "",
-    email: "",
-  });
+  const [client, setClient] =
+    useState<PreliminaryContext | null>(null);
 
   const [form, setForm] = useState<FormData>({
     currency: "AED",
-    propertyType: "",
+
     portfolioArea: "",
     numberOfProperties: "",
 
     annualEnergyCost: "",
     annualEnergyConsumption: "",
-    energySavingsRate: "",
 
     annualWaterCost: "",
     annualWaterConsumption: "",
-    waterSavingsRate: "",
 
     annualMaintenanceCost: "",
-    maintenanceSavingsRate: "",
 
     currentNOI: "",
     capRate: "",
-    occupancyRate: "",
+    exactOccupancyRate: "",
 
     esgInvestment: "",
     investmentHorizon: "10",
     discountRate: "8",
 
     carbonEmissionFactor: "",
-    certification: "",
-    primaryObjective: "",
 
     scenario: "Base",
     dataConfidence: "Moderate",
@@ -135,19 +114,27 @@ export default function RealEstateValueIntelligencePage() {
 
   useEffect(() => {
     try {
-      const stored = sessionStorage.getItem(CLIENT_CONTEXT_KEY);
+      const saved =
+        sessionStorage.getItem(CLIENT_CONTEXT_KEY);
 
-      if (stored) {
-        const parsed = JSON.parse(stored);
+      if (saved) {
+        const parsed = JSON.parse(saved);
 
-        setClient({
-          fullName: parsed.fullName || "",
-          company: parsed.company || "",
-          email: parsed.email || "",
-        });
+        setClient(parsed);
+
+        /*
+         * Carry forward the preliminary assessment's
+         * exact occupancy band only as context.
+         *
+         * We do NOT automatically convert a category
+         * such as "Above 85%" into an exact percentage.
+         */
       }
     } catch (error) {
-      console.error("Unable to load preliminary assessment context:", error);
+      console.error(
+        "Unable to load preliminary assessment context:",
+        error
+      );
     }
   }, []);
 
@@ -161,58 +148,12 @@ export default function RealEstateValueIntelligencePage() {
     }));
   }
 
-  function formatCurrency(value: number) {
+  function money(value: number) {
     return new Intl.NumberFormat("en-AE", {
       style: "currency",
       currency: form.currency,
       maximumFractionDigits: 0,
-    }).format(Number.isFinite(value) ? value : 0);
-  }
-
-  function calculateIRR(
-    investment: number,
-    annualCashFlow: number,
-    years: number
-  ) {
-    if (investment <= 0 || annualCashFlow <= 0 || years <= 0) {
-      return 0;
-    }
-
-    let rate = 0.1;
-
-    for (let i = 0; i < 100; i++) {
-      let npv = -investment;
-      let derivative = 0;
-
-      for (let year = 1; year <= years; year++) {
-        const denominator = Math.pow(1 + rate, year);
-
-        npv += annualCashFlow / denominator;
-
-        derivative -=
-          (year * annualCashFlow) /
-          Math.pow(1 + rate, year + 1);
-      }
-
-      if (Math.abs(derivative) < 0.000001) {
-        break;
-      }
-
-      const nextRate = rate - npv / derivative;
-
-      if (!Number.isFinite(nextRate)) {
-        break;
-      }
-
-      if (Math.abs(nextRate - rate) < 0.000001) {
-        rate = nextRate;
-        break;
-      }
-
-      rate = nextRate;
-    }
-
-    return Number.isFinite(rate) ? rate * 100 : 0;
+    }).format(value || 0);
   }
 
   const results = useMemo(() => {
@@ -228,122 +169,82 @@ export default function RealEstateValueIntelligencePage() {
     const investment =
       Number(form.esgInvestment) || 0;
 
-    const currentNOI =
+    const noi =
       Number(form.currentNOI) || 0;
 
-    const capRatePercent =
-      Number(form.capRate) || 0;
+    const capRate =
+      (Number(form.capRate) || 0) / 100;
 
-    const occupancyRate =
-      Number(form.occupancyRate) || 0;
+    const occupancy =
+      Number(form.exactOccupancyRate) || 0;
 
-    const horizon =
-      Math.max(
-        1,
-        Number(form.investmentHorizon) || 10
-      );
+    const years = Math.max(
+      1,
+      Number(form.investmentHorizon) || 10
+    );
 
-    const discountRate =
-      Math.max(
-        0,
-        Number(form.discountRate) || 0
-      ) / 100;
+    const discount =
+      (Number(form.discountRate) || 0) / 100;
 
-    const scenarioRates =
+    const scenario =
       SCENARIOS[form.scenario];
 
-    const energyRate =
-      form.energySavingsRate !== ""
-        ? Math.max(
-            0,
-            Math.min(
-              1,
-              Number(form.energySavingsRate) / 100
-            )
-          )
-        : scenarioRates.energy;
-
-    const waterRate =
-      form.waterSavingsRate !== ""
-        ? Math.max(
-            0,
-            Math.min(
-              1,
-              Number(form.waterSavingsRate) / 100
-            )
-          )
-        : scenarioRates.water;
-
-    const maintenanceRate =
-      form.maintenanceSavingsRate !== ""
-        ? Math.max(
-            0,
-            Math.min(
-              1,
-              Number(form.maintenanceSavingsRate) / 100
-            )
-          )
-        : scenarioRates.maintenance;
-
     const energySavings =
-      energyCost * energyRate;
+      energyCost * scenario.energy;
 
     const waterSavings =
-      waterCost * waterRate;
+      waterCost * scenario.water;
 
     const maintenanceSavings =
-      maintenanceCost * maintenanceRate;
+      maintenanceCost * scenario.maintenance;
 
-    const totalAnnualSavings =
+    const annualSavings =
       energySavings +
       waterSavings +
       maintenanceSavings;
 
     const roi =
       investment > 0
-        ? (totalAnnualSavings / investment) * 100
+        ? (annualSavings / investment) * 100
         : 0;
 
-    const paybackYears =
-      totalAnnualSavings > 0
-        ? investment / totalAnnualSavings
+    const payback =
+      annualSavings > 0
+        ? investment / annualSavings
         : 0;
 
-    const capRate =
-      capRatePercent > 0
-        ? capRatePercent / 100
-        : 0;
+    const incrementalNOI =
+      annualSavings;
+
+    const improvedNOI =
+      noi + incrementalNOI;
 
     const assetValueIncrease =
       capRate > 0
-        ? totalAnnualSavings / capRate
+        ? incrementalNOI / capRate
         : 0;
 
-    const improvedNOI =
-      currentNOI + totalAnnualSavings;
+    let npv = -investment;
 
-    let npv =
-      -investment;
-
-    for (
-      let year = 1;
-      year <= horizon;
-      year++
-    ) {
+    for (let year = 1; year <= years; year++) {
       npv +=
-        totalAnnualSavings /
-        Math.pow(
-          1 + discountRate,
-          year
-        );
+        annualSavings /
+        Math.pow(1 + discount, year);
     }
 
-    const irr =
-      calculateIRR(
-        investment,
-        totalAnnualSavings,
-        horizon
-      );
+    let irr = 0;
+
+    if (
+      investment > 0 &&
+      annualSavings > 0
+    ) {
+      irr =
+        Math.pow(
+          annualSavings /
+            investment,
+          1 / years
+        ) - 1;
+    }
 
     const energyConsumption =
       Number(form.annualEnergyConsumption) || 0;
@@ -351,337 +252,55 @@ export default function RealEstateValueIntelligencePage() {
     const emissionFactor =
       Number(form.carbonEmissionFactor) || 0;
 
-    const estimatedEnergyReduction =
-      energyConsumption * energyRate;
-
     const carbonReduction =
+      energyConsumption > 0 &&
       emissionFactor > 0
-        ? estimatedEnergyReduction *
+        ? energyConsumption *
+          scenario.energy *
           emissionFactor
         : 0;
 
-    const allQuantitativeFields = [
+    const fields = [
       form.portfolioArea,
       form.numberOfProperties,
       form.annualEnergyCost,
+      form.annualEnergyConsumption,
       form.annualWaterCost,
+      form.annualWaterConsumption,
       form.annualMaintenanceCost,
       form.currentNOI,
       form.capRate,
-      form.occupancyRate,
+      form.exactOccupancyRate,
       form.esgInvestment,
+      form.investmentHorizon,
+      form.discountRate,
+      form.carbonEmissionFactor,
     ];
 
-    const completedQuantitativeFields =
-      allQuantitativeFields.filter(
-        (value) => value !== ""
+    const completed =
+      fields.filter(
+        (field) => field !== ""
       ).length;
 
-    const dataCompleteness =
-      Math.round(
-        (completedQuantitativeFields /
-          allQuantitativeFields.length) *
-          100
-      );
-
-    const quantificationReady =
-      investment > 0 &&
-      energyCost > 0 &&
-      waterCost > 0 &&
-      maintenanceCost > 0;
-
-    let oxyValueScore = 50;
-
-    if (roi >= 30) {
-      oxyValueScore += 20;
-    } else if (roi >= 20) {
-      oxyValueScore += 15;
-    } else if (roi >= 10) {
-      oxyValueScore += 10;
-    }
-
-    if (
-      paybackYears > 0 &&
-      paybackYears <= 3
-    ) {
-      oxyValueScore += 15;
-    } else if (
-      paybackYears > 0 &&
-      paybackYears <= 5
-    ) {
-      oxyValueScore += 10;
-    } else if (
-      paybackYears > 0 &&
-      paybackYears <= 7
-    ) {
-      oxyValueScore += 5;
-    }
-
-    if (occupancyRate >= 90) {
-      oxyValueScore += 10;
-    } else if (occupancyRate >= 80) {
-      oxyValueScore += 5;
-    }
-
-    if (
-      form.primaryObjective ===
-      "Increase Asset Value"
-    ) {
-      oxyValueScore += 5;
-    }
-
-    oxyValueScore = Math.max(
-      0,
-      Math.min(
-        100,
-        Math.round(oxyValueScore)
-      )
+    const dataCompleteness = Math.round(
+      (completed / fields.length) * 100
     );
-
-    let riskExposureScore = 40;
-
-    if (occupancyRate > 0 && occupancyRate < 85) {
-      riskExposureScore += 30;
-    } else if (
-      occupancyRate > 0 &&
-      occupancyRate < 90
-    ) {
-      riskExposureScore += 15;
-    }
-
-    if (investment > 0 && roi < 10) {
-      riskExposureScore += 20;
-    } else if (
-      investment > 0 &&
-      roi < 20
-    ) {
-      riskExposureScore += 10;
-    }
-
-    riskExposureScore = Math.max(
-      0,
-      Math.min(
-        100,
-        Math.round(riskExposureScore)
-      )
-    );
-
-    const riskCategory =
-      riskExposureScore >= 70
-        ? "Elevated"
-        : riskExposureScore >= 40
-        ? "Moderate"
-        : "Managed";
-
-    let capitalReadinessScore = 50;
-
-    if (oxyValueScore >= 80) {
-      capitalReadinessScore += 30;
-    } else if (oxyValueScore >= 60) {
-      capitalReadinessScore += 20;
-    } else {
-      capitalReadinessScore += 10;
-    }
-
-    if (
-      form.primaryObjective ===
-      "Increase Asset Value"
-    ) {
-      capitalReadinessScore += 10;
-    }
-
-    capitalReadinessScore = Math.max(
-      0,
-      Math.min(
-        100,
-        Math.round(
-          capitalReadinessScore
-        )
-      )
-    );
-
-    const financingReadinessScore =
-      Math.max(
-        0,
-        Math.min(
-          100,
-          Math.round(
-            capitalReadinessScore * 0.4 +
-              Math.min(roi, 25) * 2 +
-              Math.max(
-                0,
-                10 - paybackYears
-              ) *
-                3
-          )
-        )
-      );
-
-    const financingReadinessCategory =
-      financingReadinessScore >= 80
-        ? "Institutional Ready"
-        : financingReadinessScore >= 60
-        ? "Financing Ready"
-        : financingReadinessScore >= 40
-        ? "Developing"
-        : "Early Stage";
-
-    const financingStructures: string[] = [];
-
-    if (roi >= 15) {
-      financingStructures.push(
-        "Sustainability-Linked Loan"
-      );
-    }
-
-    if (carbonReduction >= 50) {
-      financingStructures.push(
-        "Green Retrofit Financing"
-      );
-    }
-
-    if (assetValueIncrease >= 1000000) {
-      financingStructures.push(
-        "Institutional ESG Capital"
-      );
-    }
-
-    if (
-      financingStructures.length === 0
-    ) {
-      financingStructures.push(
-        "Commercial Real Estate Loan Optimization"
-      );
-
-      financingStructures.push(
-        "Energy Efficiency Incentive Programs"
-      );
-
-      financingStructures.push(
-        "Utility Rebate Financing"
-      );
-    }
-
-    const lowCaseSavings =
-      totalAnnualSavings * 0.75;
-
-    const highCaseSavings =
-      totalAnnualSavings * 1.15;
-
-    const lowCaseAssetValue =
-      capRate > 0
-        ? lowCaseSavings / capRate
-        : 0;
-
-    const highCaseAssetValue =
-      capRate > 0
-        ? highCaseSavings / capRate
-        : 0;
-
-    const opportunityMatrix: OpportunityItem[] = [
-      {
-        initiative:
-          "Energy Efficiency",
-        impact:
-          energySavings > 0
-            ? "High"
-            : "Data Required",
-        payback:
-          energySavings > 0 && investment > 0
-            ? `${(
-                (investment * 0.4) /
-                energySavings
-              ).toFixed(1)} Years`
-            : "N/A",
-        priority:
-          energySavings > 0
-            ? "Immediate"
-            : "Baseline",
-      },
-      {
-        initiative:
-          "Water Optimization",
-        impact:
-          waterSavings > 0
-            ? "Medium"
-            : "Data Required",
-        payback:
-          waterSavings > 0 && investment > 0
-            ? `${(
-                (investment * 0.2) /
-                waterSavings
-              ).toFixed(1)} Years`
-            : "N/A",
-        priority:
-          waterSavings > 0
-            ? "High"
-            : "Baseline",
-      },
-      {
-        initiative:
-          "Maintenance Optimization",
-        impact:
-          maintenanceSavings > 0
-            ? "Medium"
-            : "Data Required",
-        payback:
-          maintenanceSavings > 0 &&
-          investment > 0
-            ? `${(
-                (investment * 0.4) /
-                maintenanceSavings
-              ).toFixed(1)} Years`
-            : "N/A",
-        priority:
-          maintenanceSavings > 0
-            ? "Strategic"
-            : "Baseline",
-      },
-    ];
 
     return {
-      energyRate,
-      waterRate,
-      maintenanceRate,
-
       energySavings,
       waterSavings,
       maintenanceSavings,
-      totalAnnualSavings,
-
+      annualSavings,
       roi,
-      paybackYears,
-      assetValueIncrease,
+      payback,
+      incrementalNOI,
       improvedNOI,
-
+      assetValueIncrease,
       npv,
       irr,
-
-      estimatedEnergyReduction,
       carbonReduction,
-
       dataCompleteness,
-      quantificationReady,
-
-      oxyValueScore,
-
-      riskExposureScore,
-      riskCategory,
-
-      capitalReadinessScore,
-      financingReadinessScore,
-      financingReadinessCategory,
-      financingStructures,
-
-      lowCaseSavings,
-      highCaseSavings,
-      lowCaseAssetValue,
-      highCaseAssetValue,
-
-      opportunityMatrix,
-
-      horizon,
-      discountRate,
+      occupancy,
     };
   }, [form]);
 
@@ -689,7 +308,6 @@ export default function RealEstateValueIntelligencePage() {
     e: React.FormEvent
   ) {
     e.preventDefault();
-
     setIsSubmitting(true);
 
     try {
@@ -698,7 +316,7 @@ export default function RealEstateValueIntelligencePage() {
       payload.append(
         "_subject",
         `OXY Value Intelligence — ${
-          client.company || "Real Estate Client"
+          client?.company || "Real Estate Client"
         }`
       );
 
@@ -712,29 +330,82 @@ export default function RealEstateValueIntelligencePage() {
         "table"
       );
 
+      // =========================================
+      // CARRIED FORWARD FROM PRELIMINARY
+      // =========================================
+
       payload.append(
         "Client Name",
-        client.fullName
+        client?.fullName || ""
       );
 
       payload.append(
         "Company",
-        client.company
+        client?.company || ""
       );
 
       payload.append(
         "Email",
-        client.email
-      );
-
-      payload.append(
-        "Currency",
-        form.currency
+        client?.email || ""
       );
 
       payload.append(
         "Property Type",
-        form.propertyType
+        client?.propertyType || ""
+      );
+
+      payload.append(
+        "Portfolio Size",
+        client?.portfolioSize || ""
+      );
+
+      payload.append(
+        "Largest Operating Cost",
+        client?.largestCost || ""
+      );
+
+      payload.append(
+        "Tracks Utilities",
+        client?.tracksUtilities || ""
+      );
+
+      payload.append(
+        "Preliminary Occupancy",
+        client?.occupancyRate || ""
+      );
+
+      payload.append(
+        "Green Certification",
+        client?.greenCertification || ""
+      );
+
+      payload.append(
+        "Tenant Demand",
+        client?.tenantDemand || ""
+      );
+
+      payload.append(
+        "Primary Objective",
+        client?.primaryObjective || ""
+      );
+
+      payload.append(
+        "Preliminary Budget",
+        client?.budget || ""
+      );
+
+      payload.append(
+        "Preliminary Timeline",
+        client?.timeline || ""
+      );
+
+      // =========================================
+      // NEW VALUE INTELLIGENCE DATA
+      // =========================================
+
+      payload.append(
+        "Currency",
+        form.currency
       );
 
       payload.append(
@@ -758,13 +429,6 @@ export default function RealEstateValueIntelligencePage() {
       );
 
       payload.append(
-        "Energy Savings Rate",
-        `${(
-          results.energyRate * 100
-        ).toFixed(1)}%`
-      );
-
-      payload.append(
         "Annual Water Cost",
         form.annualWaterCost
       );
@@ -775,22 +439,8 @@ export default function RealEstateValueIntelligencePage() {
       );
 
       payload.append(
-        "Water Savings Rate",
-        `${(
-          results.waterRate * 100
-        ).toFixed(1)}%`
-      );
-
-      payload.append(
         "Annual Maintenance Cost",
         form.annualMaintenanceCost
-      );
-
-      payload.append(
-        "Maintenance Savings Rate",
-        `${(
-          results.maintenanceRate * 100
-        ).toFixed(1)}%`
       );
 
       payload.append(
@@ -804,8 +454,8 @@ export default function RealEstateValueIntelligencePage() {
       );
 
       payload.append(
-        "Occupancy Rate",
-        form.occupancyRate
+        "Exact Occupancy Rate",
+        form.exactOccupancyRate
       );
 
       payload.append(
@@ -829,16 +479,6 @@ export default function RealEstateValueIntelligencePage() {
       );
 
       payload.append(
-        "Certification",
-        form.certification
-      );
-
-      payload.append(
-        "Primary Objective",
-        form.primaryObjective
-      );
-
-      payload.append(
         "Scenario",
         form.scenario
       );
@@ -848,11 +488,13 @@ export default function RealEstateValueIntelligencePage() {
         form.dataConfidence
       );
 
+      // =========================================
+      // CALCULATED OUTPUTS
+      // =========================================
+
       payload.append(
-        "Estimated Annual Savings",
-        formatCurrency(
-          results.totalAnnualSavings
-        )
+        "Modeled Annual Savings",
+        money(results.annualSavings)
       );
 
       payload.append(
@@ -862,35 +504,32 @@ export default function RealEstateValueIntelligencePage() {
 
       payload.append(
         "Payback",
-        `${results.paybackYears.toFixed(
-          1
-        )} years`
+        `${results.payback.toFixed(1)} years`
       );
 
       payload.append(
-        "Asset Value Increase",
-        formatCurrency(
-          results.assetValueIncrease
-        )
+        "Incremental NOI",
+        money(results.incrementalNOI)
       );
 
       payload.append(
         "Improved NOI",
-        formatCurrency(
-          results.improvedNOI
-        )
+        money(results.improvedNOI)
+      );
+
+      payload.append(
+        "Indicative Asset Value Increase",
+        money(results.assetValueIncrease)
       );
 
       payload.append(
         "NPV",
-        formatCurrency(
-          results.npv
-        )
+        money(results.npv)
       );
 
       payload.append(
         "IRR",
-        `${results.irr.toFixed(1)}%`
+        `${(results.irr * 100).toFixed(1)}%`
       );
 
       payload.append(
@@ -903,20 +542,8 @@ export default function RealEstateValueIntelligencePage() {
       );
 
       payload.append(
-        "OXY Value Score",
-        `${results.oxyValueScore}/100`
-      );
-
-      payload.append(
         "Data Completeness",
         `${results.dataCompleteness}%`
-      );
-
-      payload.append(
-        "Quantification Readiness",
-        results.quantificationReady
-          ? "Ready"
-          : "Additional Data Required"
       );
 
       payload.append(
@@ -948,7 +575,7 @@ export default function RealEstateValueIntelligencePage() {
     }
   }
 
-  if (!isAuthorized) {
+  if (!authorized) {
     return (
       <main className="min-h-screen bg-[#ECFDF5] px-6 py-24">
         <section className="mx-auto max-w-xl">
@@ -962,17 +589,18 @@ export default function RealEstateValueIntelligencePage() {
             </h1>
 
             <p className="mt-4 text-center text-[#53645D]">
-              Login required to access this proprietary
-              financial intelligence platform.
+              Login required to access this
+              proprietary financial intelligence
+              platform.
             </p>
 
             <input
               type="text"
-              placeholder="Username"
               value={username}
               onChange={(e) =>
                 setUsername(e.target.value)
               }
+              placeholder="Username"
               className="mt-8 w-full rounded-xl border border-[#10251E]/15 p-4"
             />
 
@@ -983,11 +611,11 @@ export default function RealEstateValueIntelligencePage() {
                     ? "text"
                     : "password"
                 }
-                placeholder="Password"
                 value={password}
                 onChange={(e) =>
                   setPassword(e.target.value)
                 }
+                placeholder="Password"
                 className="w-full rounded-xl border border-[#10251E]/15 p-4 pr-16"
               />
 
@@ -1015,7 +643,7 @@ export default function RealEstateValueIntelligencePage() {
                   password ===
                     ADMIN_PASSWORD
                 ) {
-                  setIsAuthorized(true);
+                  setAuthorized(true);
                 } else {
                   alert(
                     "Invalid credentials"
@@ -1026,13 +654,6 @@ export default function RealEstateValueIntelligencePage() {
             >
               Login
             </button>
-
-            <a
-              href="/contact"
-              className="mt-6 block text-center text-[#3D6B4F] underline"
-            >
-              Request a Quote
-            </a>
           </div>
         </section>
       </main>
@@ -1044,244 +665,188 @@ export default function RealEstateValueIntelligencePage() {
       <main className="min-h-screen bg-[#ECFDF5] px-6 py-24 text-[#10251E] md:px-16">
         <section className="mx-auto max-w-6xl">
           <div className="rounded-[2rem] bg-white p-10 shadow-sm md:p-14">
-            <p className="text-lg font-bold uppercase tracking-[0.35em] text-[#3D6B4F]">
-              OXY Value Intelligence™
+            <p className="text-sm font-bold uppercase tracking-[0.35em] text-[#3D6B4F]">
+              OXY VALUE INTELLIGENCE™
             </p>
 
             <h1 className="mt-5 text-4xl font-bold md:text-6xl">
-              Real Estate Financial Intelligence Report
+              Financial Intelligence Report
             </h1>
 
-            <p className="mt-5 text-xl text-[#53645D]">
-              {client.company
-                ? `Analysis prepared for ${client.company}.`
-                : "Your financial intelligence analysis is complete."}
-            </p>
+            {client?.company && (
+              <p className="mt-5 text-xl text-[#53645D]">
+                Prepared for{" "}
+                <strong>
+                  {client.company}
+                </strong>
+              </p>
+            )}
 
             <div className="mt-10 grid gap-6 md:grid-cols-3">
-              <MetricCard
-                title="Estimated Annual Savings"
-                value={formatCurrency(
-                  results.totalAnnualSavings
+              <Metric
+                label="Annual Savings"
+                value={money(
+                  results.annualSavings
                 )}
               />
 
-              <MetricCard
-                title="ROI"
+              <Metric
+                label="ROI"
                 value={`${results.roi.toFixed(
                   1
                 )}%`}
               />
 
-              <MetricCard
-                title="Payback Period"
-                value={`${results.paybackYears.toFixed(
+              <Metric
+                label="Payback"
+                value={`${results.payback.toFixed(
                   1
-                )} Years`}
+                )} years`}
               />
 
-              <MetricCard
-                title="Asset Value Increase"
-                value={formatCurrency(
+              <Metric
+                label="Incremental NOI"
+                value={money(
+                  results.incrementalNOI
+                )}
+              />
+
+              <Metric
+                label="Asset Value Impact"
+                value={money(
                   results.assetValueIncrease
                 )}
               />
 
-              <MetricCard
-                title="NPV"
-                value={formatCurrency(
+              <Metric
+                label="NPV"
+                value={money(
                   results.npv
                 )}
               />
-
-              <MetricCard
-                title="IRR"
-                value={`${results.irr.toFixed(
-                  1
-                )}%`}
-              />
             </div>
 
-            <ReportSection
-              title="Executive View"
-              text={`Based on the information provided, the portfolio has a modeled annual operating savings opportunity of ${formatCurrency(
-                results.totalAnnualSavings
-              )}. This translates into an estimated NOI improvement of ${formatCurrency(
-                results.totalAnnualSavings
-              )}, subject to validation through detailed operational assessment and implementation.`}
-            />
-
-            <ReportSection
-              title="Value Bridge"
-              text={`The modeled value bridge moves from operating efficiency to annual savings, then to NOI improvement and, where a capitalization rate has been provided, an indicative asset-value impact. The valuation calculation is illustrative and should be validated against asset-specific valuation evidence.`}
-            />
-
-            <div className="mt-12">
+            <section className="mt-12">
               <h2 className="text-3xl font-bold">
-                Scenario Analysis
+                Executive View
               </h2>
 
-              <div className="mt-6 grid gap-6 md:grid-cols-3">
-                <MetricCard
-                  title="Conservative"
-                  value={formatCurrency(
-                    results.lowCaseSavings
+              <p className="mt-4 text-lg leading-8 text-[#53645D]">
+                Based on the quantitative data
+                provided, the portfolio has a
+                modeled annual operating savings
+                opportunity of{" "}
+                <strong>
+                  {money(
+                    results.annualSavings
                   )}
-                  subtitle="75% of modeled savings."
-                />
-
-                <MetricCard
-                  title="Base"
-                  value={formatCurrency(
-                    results.totalAnnualSavings
+                </strong>
+                . This translates into a modeled
+                incremental NOI contribution of{" "}
+                <strong>
+                  {money(
+                    results.incrementalNOI
                   )}
-                  subtitle="Selected planning scenario."
-                />
-
-                <MetricCard
-                  title="Upside"
-                  value={formatCurrency(
-                    results.highCaseSavings
-                  )}
-                  subtitle="115% of modeled savings."
-                />
-              </div>
-            </div>
-
-            <ReportSection
-              title="Carbon Intelligence"
-              text={
-                results.carbonReduction > 0
-                  ? `Based on the energy consumption and emission factor provided, the modeled energy-efficiency opportunity corresponds to approximately ${results.carbonReduction.toFixed(
-                      1
-                    )} tCO₂e of annual emissions reduction.`
-                  : "Carbon reduction has not been quantified because an annual energy-consumption figure and emission factor were not both provided."
-              }
-            />
-
-            <ReportSection
-              title="Risk Intelligence"
-              text={`Current modeled risk exposure is ${results.riskCategory}. This indicator is derived from the portfolio inputs provided and is intended as OXY decision-support analysis rather than an external risk rating.`}
-            />
-
-            <ReportSection
-              title="Sustainable Finance"
-              text={`The modeled financing-readiness category is ${results.financingReadinessCategory}. Potential structures identified from the submitted financial profile include ${results.financingStructures.join(
-                ", "
-              )}. Financing suitability requires lender-specific underwriting and asset-level due diligence.`}
-            />
-
-            <div className="mt-12">
-              <h2 className="text-3xl font-bold">
-                Opportunity Matrix
-              </h2>
-
-              <div className="mt-6 overflow-x-auto rounded-2xl border border-[#10251E]/10">
-                <table className="w-full min-w-[650px] text-left">
-                  <thead className="bg-[#ECFDF5]">
-                    <tr>
-                      <th className="p-4">
-                        Initiative
-                      </th>
-                      <th className="p-4">
-                        Impact
-                      </th>
-                      <th className="p-4">
-                        Indicative Payback
-                      </th>
-                      <th className="p-4">
-                        Priority
-                      </th>
-                    </tr>
-                  </thead>
-
-                  <tbody>
-                    {results.opportunityMatrix.map(
-                      (item) => (
-                        <tr
-                          key={
-                            item.initiative
-                          }
-                          className="border-t border-[#10251E]/10"
-                        >
-                          <td className="p-4 font-semibold">
-                            {
-                              item.initiative
-                            }
-                          </td>
-                          <td className="p-4">
-                            {item.impact}
-                          </td>
-                          <td className="p-4">
-                            {item.payback}
-                          </td>
-                          <td className="p-4">
-                            {item.priority}
-                          </td>
-                        </tr>
-                      )
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <div className="mt-12 rounded-[2rem] bg-[#ECFDF5] p-8">
-              <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#3D6B4F]">
-                Calculation Basis
+                </strong>
+                .
               </p>
+            </section>
 
-              <h2 className="mt-3 text-2xl font-bold">
-                OXY Value Intelligence Calculation Basis v2.0
+            <section className="mt-12">
+              <h2 className="text-3xl font-bold">
+                Value Bridge
               </h2>
 
-              <ul className="mt-6 space-y-3 leading-8 text-[#53645D]">
+              <div className="mt-6 grid gap-4 md:grid-cols-4">
+                <Bridge
+                  title="Operating Efficiency"
+                  value={money(
+                    results.annualSavings
+                  )}
+                />
+
+                <Bridge
+                  title="Annual Savings"
+                  value={money(
+                    results.annualSavings
+                  )}
+                />
+
+                <Bridge
+                  title="NOI Improvement"
+                  value={money(
+                    results.incrementalNOI
+                  )}
+                />
+
+                <Bridge
+                  title="Indicative Value Impact"
+                  value={money(
+                    results.assetValueIncrease
+                  )}
+                />
+              </div>
+            </section>
+
+            <section className="mt-12 rounded-[2rem] bg-[#ECFDF5] p-8">
+              <h2 className="text-2xl font-bold">
+                Calculation Basis
+              </h2>
+
+              <ul className="mt-5 space-y-3 leading-8 text-[#53645D]">
                 <li>
-                  • Scenario savings rates are
-                  internal OXY planning assumptions,
-                  not guarantees.
+                  • Energy savings use the selected
+                  OXY planning scenario.
                 </li>
+
+                <li>
+                  • Water savings use the selected
+                  OXY planning scenario.
+                </li>
+
+                <li>
+                  • Maintenance savings use the
+                  selected OXY planning scenario.
+                </li>
+
                 <li>
                   • Asset value impact is calculated
                   from incremental NOI divided by
-                  the client-provided cap rate.
+                  the provided cap rate.
                 </li>
+
                 <li>
-                  • NPV uses the client-provided
-                  investment horizon and discount rate.
+                  • NPV uses the stated investment
+                  horizon and discount rate.
                 </li>
+
                 <li>
-                  • IRR is calculated from the
-                  modeled investment and annual
-                  savings.
+                  • Carbon is only quantified when
+                  energy consumption and an emission
+                  factor are supplied.
                 </li>
+
                 <li>
-                  • Carbon calculations require
-                  actual energy consumption and an
-                  emission factor.
-                </li>
-                <li>
-                  • Final savings and valuation
-                  outcomes require asset-level
-                  validation.
+                  • Results are modeled estimates,
+                  not guarantees or independent
+                  valuation opinions.
                 </li>
               </ul>
-            </div>
+            </section>
 
-            <div className="mt-12 rounded-[2rem] bg-[#10251E] px-8 py-12 text-center text-white">
+            <section className="mt-12 rounded-[2rem] bg-[#10251E] p-10 text-center text-white">
               <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#B9D2B1]">
-                Recommended Next Step
+                Next Stage
               </p>
 
-              <h2 className="mt-4 text-3xl font-bold md:text-4xl">
+              <h2 className="mt-4 text-3xl font-bold">
                 OXY Implementation Intelligence™
               </h2>
 
-              <p className="mx-auto mt-5 max-w-3xl text-lg leading-8 text-white/80">
-                Translate the quantified opportunity
-                into an implementation roadmap,
-                priorities, governance structure,
-                and execution plan.
+              <p className="mx-auto mt-4 max-w-3xl text-lg leading-8 text-white/80">
+                Translate the quantified financial
+                opportunity into an implementation
+                roadmap.
               </p>
 
               <a
@@ -1290,51 +855,7 @@ export default function RealEstateValueIntelligencePage() {
               >
                 Continue to Implementation Intelligence
               </a>
-            </div>
-
-            <div className="mt-12">
-              <h2 className="text-2xl font-bold">
-                Methodology Sources
-              </h2>
-
-              <div className="mt-5 space-y-3 text-[#53645D]">
-                <a
-                  href={SOURCES.dewaHandbook}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block underline"
-                >
-                  DEWA Energy Conservation Handbook 2025
-                </a>
-
-                <a
-                  href={SOURCES.dewaDSM}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block underline"
-                >
-                  DEWA Demand Side Management Strategy 2050
-                </a>
-
-                <a
-                  href={SOURCES.rics}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block underline"
-                >
-                  RICS — ESG and Sustainability in Commercial Property Valuation
-                </a>
-
-                <a
-                  href={SOURCES.energyStar}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block underline"
-                >
-                  ENERGY STAR — Energy Use Intensity
-                </a>
-              </div>
-            </div>
+            </section>
           </div>
         </section>
       </main>
@@ -1346,38 +867,34 @@ export default function RealEstateValueIntelligencePage() {
       <section className="mx-auto max-w-6xl">
         <div className="text-center">
           <p className="text-sm font-bold uppercase tracking-[0.35em] text-[#3D6B4F]">
-            OXY Value Intelligence™
+            OXY VALUE INTELLIGENCE™
           </p>
 
           <h1 className="mx-auto mt-5 max-w-5xl text-5xl font-bold leading-tight md:text-7xl">
-            Quantify the Financial Value of Sustainability
+            Quantify the Financial Value
           </h1>
 
           <p className="mx-auto mt-6 max-w-4xl text-xl leading-9 text-[#53645D]">
-            Your Preliminary Assessment established the
-            opportunity areas. This stage uses your actual
-            portfolio and financial data to quantify
-            savings, NOI impact, investment returns and
-            indicative asset-value implications.
+            Your Preliminary Assessment identified
+            the opportunity. This stage collects only
+            the additional quantitative information
+            required to calculate financial value.
           </p>
         </div>
 
-        {client.company && (
-          <div className="mx-auto mt-10 max-w-5xl rounded-2xl bg-white px-6 py-4 text-center shadow-sm">
-            <span className="text-sm uppercase tracking-[0.2em] text-[#53645D]">
-              Analysis for
-            </span>
+        {client && (
+          <div className="mx-auto mt-10 max-w-5xl rounded-2xl bg-white px-6 py-5 text-center shadow-sm">
+            <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#3D6B4F]">
+              Preliminary Assessment Connected
+            </p>
 
-            <span className="ml-2 font-semibold">
+            <p className="mt-2 text-lg font-semibold">
               {client.company}
-            </span>
-          </div>
-        )}
+            </p>
 
-        {!client.company && (
-          <div className="mx-auto mt-10 max-w-5xl rounded-2xl border border-[#D7E9DF] bg-white px-6 py-4 text-center text-sm text-[#53645D]">
-            Client information will be attached automatically
-            from the Preliminary Assessment.
+            <p className="mt-1 text-sm text-[#53645D]">
+              {client.fullName}
+            </p>
           </div>
         )}
 
@@ -1385,385 +902,284 @@ export default function RealEstateValueIntelligencePage() {
           onSubmit={handleSubmit}
           className="mt-8 rounded-[2rem] bg-white p-8 shadow-sm md:p-12"
         >
-          <FormSection
+          <Section
             number="01"
-            title="Portfolio & Analysis Context"
-            description="Establish the portfolio and financial context for the analysis."
+            title="Portfolio Quantification"
+            description="New quantitative information only."
           >
-            <SelectField
+            <Select
               label="Currency"
               value={form.currency}
-              onChange={(value) =>
+              onChange={(v) =>
                 updateField(
                   "currency",
-                  value as "AED" | "USD"
+                  v as "AED" | "USD"
                 )
               }
               options={["AED", "USD"]}
             />
 
-            <SelectField
-              label="Property Type"
-              value={form.propertyType}
-              onChange={(value) =>
-                updateField(
-                  "propertyType",
-                  value
-                )
-              }
-              options={[
-                "Office",
-                "Residential",
-                "Retail",
-                "Mixed Use",
-                "Industrial",
-                "Hospitality",
-                "Other",
-              ]}
-            />
-
-            <NumberField
+            <Number
               label="Total Portfolio Area"
               value={form.portfolioArea}
-              onChange={(value) =>
+              onChange={(v) =>
                 updateField(
                   "portfolioArea",
-                  value
+                  v
                 )
               }
               placeholder="e.g. 250000"
               suffix="sq ft"
             />
 
-            <NumberField
+            <Number
               label="Number of Properties"
               value={
                 form.numberOfProperties
               }
-              onChange={(value) =>
+              onChange={(v) =>
                 updateField(
                   "numberOfProperties",
-                  value
+                  v
                 )
               }
               placeholder="e.g. 12"
             />
-          </FormSection>
 
-          <FormSection
+            <div className="rounded-2xl bg-[#ECFDF5] p-5 text-sm leading-7 text-[#53645D]">
+              Your property type and portfolio
+              size were already captured in the
+              Preliminary Assessment and are being
+              carried forward automatically.
+            </div>
+          </Section>
+
+          <Section
             number="02"
-            title="Energy Intelligence"
-            description="Enter actual annual energy costs and consumption where available."
+            title="Energy Quantification"
+            description="Actual annual energy data used for savings and carbon calculations."
           >
-            <NumberField
+            <Number
               label="Annual Energy Cost"
               value={
                 form.annualEnergyCost
               }
-              onChange={(value) =>
+              onChange={(v) =>
                 updateField(
                   "annualEnergyCost",
-                  value
+                  v
                 )
               }
               placeholder="e.g. 2500000"
               prefix={form.currency}
             />
 
-            <NumberField
+            <Number
               label="Annual Energy Consumption"
               value={
                 form.annualEnergyConsumption
               }
-              onChange={(value) =>
+              onChange={(v) =>
                 updateField(
                   "annualEnergyConsumption",
-                  value
+                  v
                 )
               }
               placeholder="e.g. 12500"
               suffix="MWh"
             />
+          </Section>
 
-            <NumberField
-              label="Client-Specified Energy Savings Rate"
-              value={
-                form.energySavingsRate
-              }
-              onChange={(value) =>
-                updateField(
-                  "energySavingsRate",
-                  value
-                )
-              }
-              placeholder="Optional"
-              suffix="%"
-            />
-
-            <div className="rounded-2xl bg-[#ECFDF5] p-5 text-sm leading-7 text-[#53645D]">
-              If no client-specific rate is
-              entered, the selected OXY planning
-              scenario will be used. These are
-              planning assumptions, not guaranteed
-              savings.
-            </div>
-          </FormSection>
-
-          <FormSection
+          <Section
             number="03"
-            title="Water Intelligence"
-            description="Quantify the water-cost opportunity using actual portfolio data."
+            title="Water Quantification"
+            description="Actual annual water data used to quantify the water opportunity."
           >
-            <NumberField
+            <Number
               label="Annual Water Cost"
               value={
                 form.annualWaterCost
               }
-              onChange={(value) =>
+              onChange={(v) =>
                 updateField(
                   "annualWaterCost",
-                  value
+                  v
                 )
               }
               placeholder="e.g. 800000"
               prefix={form.currency}
             />
 
-            <NumberField
+            <Number
               label="Annual Water Consumption"
               value={
                 form.annualWaterConsumption
               }
-              onChange={(value) =>
+              onChange={(v) =>
                 updateField(
                   "annualWaterConsumption",
-                  value
+                  v
                 )
               }
               placeholder="Optional"
               suffix="m³"
             />
+          </Section>
 
-            <NumberField
-              label="Client-Specified Water Savings Rate"
-              value={
-                form.waterSavingsRate
-              }
-              onChange={(value) =>
-                updateField(
-                  "waterSavingsRate",
-                  value
-                )
-              }
-              placeholder="Optional"
-              suffix="%"
-            />
-          </FormSection>
-
-          <FormSection
+          <Section
             number="04"
-            title="Maintenance Intelligence"
-            description="Identify the potential operating-value contribution from maintenance optimization."
+            title="Maintenance Quantification"
+            description="Annual maintenance expenditure used to model operational savings."
           >
-            <NumberField
+            <Number
               label="Annual Maintenance Cost"
               value={
                 form.annualMaintenanceCost
               }
-              onChange={(value) =>
+              onChange={(v) =>
                 updateField(
                   "annualMaintenanceCost",
-                  value
+                  v
                 )
               }
               placeholder="e.g. 1200000"
               prefix={form.currency}
             />
+          </Section>
 
-            <NumberField
-              label="Client-Specified Maintenance Savings Rate"
-              value={
-                form.maintenanceSavingsRate
-              }
-              onChange={(value) =>
-                updateField(
-                  "maintenanceSavingsRate",
-                  value
-                )
-              }
-              placeholder="Optional"
-              suffix="%"
-            />
-          </FormSection>
-
-          <FormSection
+          <Section
             number="05"
-            title="Property Financials"
-            description="These inputs connect operational savings to NOI and asset value."
+            title="Financial Value"
+            description="Connect operational opportunities to NOI and asset value."
           >
-            <NumberField
+            <Number
               label="Current Annual NOI"
               value={form.currentNOI}
-              onChange={(value) =>
+              onChange={(v) =>
                 updateField(
                   "currentNOI",
-                  value
+                  v
                 )
               }
               placeholder="e.g. 15000000"
               prefix={form.currency}
             />
 
-            <NumberField
+            <Number
               label="Capitalization Rate"
               value={form.capRate}
-              onChange={(value) =>
+              onChange={(v) =>
                 updateField(
                   "capRate",
-                  value
+                  v
                 )
               }
               placeholder="e.g. 7"
               suffix="%"
             />
 
-            <NumberField
-              label="Current Occupancy Rate"
+            <Number
+              label="Exact Current Occupancy Rate"
               value={
-                form.occupancyRate
+                form.exactOccupancyRate
               }
-              onChange={(value) =>
+              onChange={(v) =>
                 updateField(
-                  "occupancyRate",
-                  value
+                  "exactOccupancyRate",
+                  v
                 )
               }
               placeholder="e.g. 92"
               suffix="%"
             />
 
-            <NumberField
+            <div className="rounded-2xl bg-[#ECFDF5] p-5 text-sm leading-7 text-[#53645D]">
+              Your Preliminary Assessment already
+              captured your occupancy category.
+              This field is only asking for the
+              actual percentage needed for financial
+              modelling.
+            </div>
+
+            <Number
               label="Proposed ESG / Sustainability Investment"
               value={
                 form.esgInvestment
               }
-              onChange={(value) =>
+              onChange={(v) =>
                 updateField(
                   "esgInvestment",
-                  value
+                  v
                 )
               }
               placeholder="e.g. 3000000"
               prefix={form.currency}
             />
-          </FormSection>
+          </Section>
 
-          <FormSection
+          <Section
             number="06"
-            title="Investment & Valuation Assumptions"
-            description="Set the financial horizon used for the modeled return analysis."
+            title="Investment Modelling"
+            description="Financial assumptions required for return analysis."
           >
-            <NumberField
+            <Number
               label="Investment Horizon"
               value={
                 form.investmentHorizon
               }
-              onChange={(value) =>
+              onChange={(v) =>
                 updateField(
                   "investmentHorizon",
-                  value
+                  v
                 )
               }
               placeholder="10"
               suffix="years"
             />
 
-            <NumberField
+            <Number
               label="Discount Rate"
               value={
                 form.discountRate
               }
-              onChange={(value) =>
+              onChange={(v) =>
                 updateField(
                   "discountRate",
-                  value
+                  v
                 )
               }
               placeholder="8"
               suffix="%"
             />
 
-            <NumberField
+            <Number
               label="Carbon Emission Factor"
               value={
                 form.carbonEmissionFactor
               }
-              onChange={(value) =>
+              onChange={(v) =>
                 updateField(
                   "carbonEmissionFactor",
-                  value
+                  v
                 )
               }
               placeholder="Optional"
               suffix="tCO₂e/MWh"
             />
+          </Section>
 
-            <SelectField
-              label="Existing Green Certification"
-              value={
-                form.certification
-              }
-              onChange={(value) =>
-                updateField(
-                  "certification",
-                  value
-                )
-              }
-              options={[
-                "None",
-                "LEED",
-                "BREEAM",
-                "WELL",
-                "Estidama",
-                "Other",
-              ]}
-            />
-          </FormSection>
-
-          <FormSection
+          <Section
             number="07"
-            title="Strategic Direction"
-            description="Define the commercial outcome this analysis should support."
+            title="Analysis Controls"
+            description="These control how OXY models the financial opportunity."
           >
-            <SelectField
-              label="Primary Objective"
-              value={
-                form.primaryObjective
-              }
-              onChange={(value) =>
-                updateField(
-                  "primaryObjective",
-                  value
-                )
-              }
-              options={[
-                "Reduce Operating Costs",
-                "Increase Asset Value",
-                "Improve NOI",
-                "Reduce Carbon",
-                "Improve Tenant Experience",
-                "Improve Financing Readiness",
-                "Portfolio ESG Strategy",
-              ]}
-            />
-
-            <SelectField
+            <Select
               label="Planning Scenario"
               value={form.scenario}
-              onChange={(value) =>
+              onChange={(v) =>
                 updateField(
                   "scenario",
-                  value as
+                  v as
                     | "Conservative"
                     | "Base"
                     | "Upside"
@@ -1776,15 +1192,15 @@ export default function RealEstateValueIntelligencePage() {
               ]}
             />
 
-            <SelectField
+            <Select
               label="Data Confidence"
               value={
                 form.dataConfidence
               }
-              onChange={(value) =>
+              onChange={(v) =>
                 updateField(
                   "dataConfidence",
-                  value as
+                  v as
                     | "Low"
                     | "Moderate"
                     | "High"
@@ -1796,60 +1212,58 @@ export default function RealEstateValueIntelligencePage() {
                 "High",
               ]}
             />
-          </FormSection>
+          </Section>
 
-          <div className="mt-12 rounded-[2rem] bg-[#10251E] p-8 text-white">
+          <div className="mt-10 rounded-[2rem] bg-[#10251E] p-8 text-white">
             <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#B9D2B1]">
-              Live Analysis Preview
+              Live Value Preview
             </p>
 
             <div className="mt-6 grid gap-6 md:grid-cols-4">
-              <PreviewMetric
+              <Preview
                 label="Annual Savings"
-                value={formatCurrency(
-                  results.totalAnnualSavings
+                value={money(
+                  results.annualSavings
                 )}
               />
 
-              <PreviewMetric
+              <Preview
                 label="ROI"
                 value={`${results.roi.toFixed(
                   1
                 )}%`}
               />
 
-              <PreviewMetric
+              <Preview
                 label="Payback"
-                value={`${results.paybackYears.toFixed(
+                value={`${results.payback.toFixed(
                   1
                 )} yrs`}
               />
 
-              <PreviewMetric
-                label="Asset Value"
-                value={formatCurrency(
+              <Preview
+                label="Asset Value Impact"
+                value={money(
                   results.assetValueIncrease
                 )}
               />
             </div>
           </div>
 
-          <div className="mt-10 rounded-2xl bg-[#ECFDF5] p-6 text-sm leading-7 text-[#53645D]">
+          <div className="mt-8 rounded-2xl bg-[#ECFDF5] p-6 text-sm leading-7 text-[#53645D]">
             <strong className="text-[#10251E]">
               Important:
             </strong>{" "}
-            OXY Value Intelligence™ uses client-provided
-            data and clearly identified OXY planning
-            assumptions. Modeled savings, valuation
-            impacts and financing indicators are not
-            guarantees and should be validated through
-            detailed asset-level assessment.
+            OXY planning scenarios are internal
+            analytical assumptions. They are not
+            guaranteed savings and should be validated
+            using asset-level operational data.
           </div>
 
           <button
             type="submit"
             disabled={isSubmitting}
-            className="mt-10 w-full rounded-full bg-[#10251E] px-8 py-5 text-lg font-semibold text-white transition hover:bg-[#1D3A30] disabled:cursor-not-allowed disabled:opacity-60"
+            className="mt-8 w-full rounded-full bg-[#10251E] px-8 py-5 text-lg font-semibold text-white disabled:opacity-50"
           >
             {isSubmitting
               ? "Generating Intelligence Report..."
@@ -1861,7 +1275,7 @@ export default function RealEstateValueIntelligencePage() {
   );
 }
 
-function FormSection({
+function Section({
   number,
   title,
   description,
@@ -1873,8 +1287,8 @@ function FormSection({
   children: React.ReactNode;
 }) {
   return (
-    <section className="border-b border-[#10251E]/10 py-12 first:pt-0 last:border-b-0">
-      <div className="flex items-start gap-5">
+    <section className="border-b border-[#10251E]/10 py-12 first:pt-0">
+      <div className="flex gap-5">
         <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#DDF4E8] font-semibold text-[#3D6B4F]">
           {number}
         </div>
@@ -1897,7 +1311,7 @@ function FormSection({
   );
 }
 
-function NumberField({
+function Number({
   label,
   value,
   onChange,
@@ -1934,11 +1348,9 @@ function NumberField({
             onChange(e.target.value)
           }
           placeholder={placeholder}
-          className={`w-full rounded-2xl border border-[#10251E]/15 bg-[#F8FCFA] px-5 py-4 outline-none transition focus:border-[#3D6B4F] ${
+          className={`w-full rounded-2xl border border-[#10251E]/15 bg-[#F8FCFA] px-5 py-4 ${
             prefix ? "pl-14" : ""
-          } ${
-            suffix ? "pr-20" : ""
-          }`}
+          } ${suffix ? "pr-20" : ""}`}
         />
 
         {suffix && (
@@ -1951,7 +1363,7 @@ function NumberField({
   );
 }
 
-function SelectField({
+function Select({
   label,
   value,
   onChange,
@@ -1973,7 +1385,7 @@ function SelectField({
         onChange={(e) =>
           onChange(e.target.value)
         }
-        className="mt-3 w-full rounded-2xl border border-[#10251E]/15 bg-[#F8FCFA] px-5 py-4 outline-none focus:border-[#3D6B4F]"
+        className="mt-3 w-full rounded-2xl border border-[#10251E]/15 bg-[#F8FCFA] px-5 py-4"
       >
         <option value="">
           Select...
@@ -1992,35 +1404,47 @@ function SelectField({
   );
 }
 
-function MetricCard({
-  title,
+function Metric({
+  label,
   value,
-  subtitle,
 }: {
-  title: string;
+  label: string;
   value: string;
-  subtitle?: string;
 }) {
   return (
     <div className="rounded-2xl bg-[#ECFDF5] p-6">
       <p className="text-sm font-bold uppercase tracking-[0.15em] text-[#3D6B4F]">
-        {title}
+        {label}
       </p>
 
       <p className="mt-3 text-3xl font-bold">
         {value}
       </p>
-
-      {subtitle && (
-        <p className="mt-2 text-sm text-[#53645D]">
-          {subtitle}
-        </p>
-      )}
     </div>
   );
 }
 
-function PreviewMetric({
+function Bridge({
+  title,
+  value,
+}: {
+  title: string;
+  value: string;
+}) {
+  return (
+    <div className="rounded-2xl bg-[#ECFDF5] p-5">
+      <p className="text-sm font-semibold text-[#53645D]">
+        {title}
+      </p>
+
+      <p className="mt-2 text-xl font-bold">
+        {value}
+      </p>
+    </div>
+  );
+}
+
+function Preview({
   label,
   value,
 }: {
@@ -2037,25 +1461,5 @@ function PreviewMetric({
         {value}
       </p>
     </div>
-  );
-}
-
-function ReportSection({
-  title,
-  text,
-}: {
-  title: string;
-  text: string;
-}) {
-  return (
-    <section className="mt-12">
-      <h2 className="text-3xl font-bold">
-        {title}
-      </h2>
-
-      <p className="mt-4 max-w-4xl text-lg leading-8 text-[#53645D]">
-        {text}
-      </p>
-    </section>
   );
 }

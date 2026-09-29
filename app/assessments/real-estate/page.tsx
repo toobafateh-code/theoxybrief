@@ -1124,15 +1124,35 @@ export default function RealEstateAssessmentPage() {
         "Assessment email failed:",
         error
       );
-    } finally {
-      setIsSubmitting(false);
-      setSubmitted(true);
+ } finally {
+  setIsSubmitting(false);
 
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
-    }
+  sessionStorage.setItem(
+    "oxyRealEstateAssessmentClient",
+    JSON.stringify({
+      fullName: form.fullName,
+      company: form.company,
+      email: form.email,
+      propertyType: form.propertyType,
+      portfolioSize: form.portfolioSize,
+      largestCost: form.largestCost,
+      tracksUtilities: form.tracksUtilities,
+      occupancyRate: form.occupancyRate,
+      greenCertification: form.greenCertification,
+      tenantDemand: form.tenantDemand,
+      primaryObjective: form.primaryObjective,
+      budget: form.budget,
+      timeline: form.timeline,
+    })
+  );
+
+  setSubmitted(true);
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+}
   }
 
   /* =======================================================

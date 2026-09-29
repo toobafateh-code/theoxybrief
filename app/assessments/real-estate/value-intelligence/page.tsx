@@ -46,13 +46,17 @@ type FormData = {
   dataConfidence: "Low" | "Moderate" | "High";
 };
 
-const CLIENT_CONTEXT_KEY = "oxyRealEstateAssessmentClient";
+const CLIENT_CONTEXT_KEY =
+  "oxyRealEstateAssessmentClient";
 
 const FORM_SUBMIT_ENDPOINT =
   "https://formsubmit.co/ajax/tooba@theoxybrief.com";
 
 const ADMIN_USERNAME = "tooba";
 const ADMIN_PASSWORD = "OXY_2026_FOUNDER!";
+
+const FOUNDER_ACCESS_KEY =
+  "oxyFounderValueIntelligenceAccess";
 
 const SCENARIOS = {
   Conservative: {
@@ -72,14 +76,41 @@ const SCENARIOS = {
   },
 };
 
-export default function ValueIntelligencePage() {
-  const [authorized, setAuthorized] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+const SOURCES = {
+  dewaHandbook:
+    "https://dewa.gov.ae/-/media/Files/Handbooks2025/Energy-Conservation-Handbook_2025_2_EN.ashx",
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  dewaDSM:
+    "https://www.dewa.gov.ae/en/about-us/media-publications/latest-news/2024/07/hh-sheikh-ahmed-bin-saeed-al-maktoum-issues",
+
+  rics:
+    "https://www.rics.org/profession-standards/rics-standards-and-guidance/sector-standards/valuation-standards/esg-and-sustainability-in-commercial-property-valuation",
+
+  energyStar:
+    "https://www.energystar.gov/buildings/benchmark/understand-metrics/what-eui",
+};
+
+export default function ValueIntelligencePage() {
+  const [authorized, setAuthorized] =
+    useState(false);
+
+  const [isFounderAccess, setIsFounderAccess] =
+    useState(false);
+
+  const [submitted, setSubmitted] =
+    useState(false);
+
+  const [isSubmitting, setIsSubmitting] =
+    useState(false);
+
+  const [username, setUsername] =
+    useState("");
+
+  const [password, setPassword] =
+    useState("");
+
+  const [showPassword, setShowPassword] =
+    useState(false);
 
   const [client, setClient] =
     useState<PreliminaryContext | null>(null);
@@ -112,27 +143,66 @@ export default function ValueIntelligencePage() {
     dataConfidence: "Moderate",
   });
 
+  /*
+   * ACCESS + PRELIMINARY DATA HANDOFF
+   *
+   * Founder:
+   * - If founder access was already established
+   *   on this browser, go directly into the
+   *   Value Intelligence form.
+   *
+   * Client:
+   * - Preliminary Assessment information is loaded
+   *   from sessionStorage.
+   */
+
   useEffect(() => {
     try {
+      const founderAccess =
+        localStorage.getItem(
+          FOUNDER_ACCESS_KEY
+        );
+
+      if (founderAccess === "true") {
+        setIsFounderAccess(true);
+        setAuthorized(true);
+      }
+
       const saved =
-        sessionStorage.getItem(CLIENT_CONTEXT_KEY);
+        sessionStorage.getItem(
+          CLIENT_CONTEXT_KEY
+        );
 
       if (saved) {
         const parsed = JSON.parse(saved);
 
-        setClient(parsed);
-
-        /*
-         * Carry forward the preliminary assessment's
-         * exact occupancy band only as context.
-         *
-         * We do NOT automatically convert a category
-         * such as "Above 85%" into an exact percentage.
-         */
+        setClient({
+          fullName: parsed.fullName || "",
+          company: parsed.company || "",
+          email: parsed.email || "",
+          propertyType:
+            parsed.propertyType || "",
+          portfolioSize:
+            parsed.portfolioSize || "",
+          largestCost:
+            parsed.largestCost || "",
+          tracksUtilities:
+            parsed.tracksUtilities || "",
+          occupancyRate:
+            parsed.occupancyRate || "",
+          greenCertification:
+            parsed.greenCertification || "",
+          tenantDemand:
+            parsed.tenantDemand || "",
+          primaryObjective:
+            parsed.primaryObjective || "",
+          budget: parsed.budget || "",
+          timeline: parsed.timeline || "",
+        });
       }
     } catch (error) {
       console.error(
-        "Unable to load preliminary assessment context:",
+        "Unable to load Value Intelligence access context:",
         error
       );
     }
@@ -142,19 +212,26 @@ export default function ValueIntelligencePage() {
     field: K,
     value: FormData[K]
   ) {
-    setForm((prev) => ({
-      ...prev,
+    setForm((previous) => ({
+      ...previous,
       [field]: value,
     }));
   }
 
-  function money(value: number) {
-    return new Intl.NumberFormat("en-AE", {
-      style: "currency",
-      currency: form.currency,
-      maximumFractionDigits: 0,
-    }).format(value || 0);
+  function formatMoney(value: number) {
+    return new Intl.NumberFormat(
+      "en-AE",
+      {
+        style: "currency",
+        currency: form.currency,
+        maximumFractionDigits: 0,
+      }
+    ).format(value || 0);
   }
+
+  /*
+   * FINANCIAL CALCULATION ENGINE
+   */
 
   const results = useMemo(() => {
     const energyCost =
@@ -169,7 +246,7 @@ export default function ValueIntelligencePage() {
     const investment =
       Number(form.esgInvestment) || 0;
 
-    const noi =
+    const currentNOI =
       Number(form.currentNOI) || 0;
 
     const capRate =
@@ -178,12 +255,13 @@ export default function ValueIntelligencePage() {
     const occupancy =
       Number(form.exactOccupancyRate) || 0;
 
-    const years = Math.max(
-      1,
-      Number(form.investmentHorizon) || 10
-    );
+    const investmentHorizon =
+      Math.max(
+        1,
+        Number(form.investmentHorizon) || 10
+      );
 
-    const discount =
+    const discountRate =
       (Number(form.discountRate) || 0) / 100;
 
     const scenario =
@@ -196,7 +274,8 @@ export default function ValueIntelligencePage() {
       waterCost * scenario.water;
 
     const maintenanceSavings =
-      maintenanceCost * scenario.maintenance;
+      maintenanceCost *
+      scenario.maintenance;
 
     const annualSavings =
       energySavings +
@@ -205,7 +284,8 @@ export default function ValueIntelligencePage() {
 
     const roi =
       investment > 0
-        ? (annualSavings / investment) * 100
+        ? (annualSavings / investment) *
+          100
         : 0;
 
     const payback =
@@ -217,20 +297,35 @@ export default function ValueIntelligencePage() {
       annualSavings;
 
     const improvedNOI =
-      noi + incrementalNOI;
+      currentNOI + incrementalNOI;
 
     const assetValueIncrease =
       capRate > 0
         ? incrementalNOI / capRate
         : 0;
 
+    /*
+     * NPV
+     */
+
     let npv = -investment;
 
-    for (let year = 1; year <= years; year++) {
+    for (
+      let year = 1;
+      year <= investmentHorizon;
+      year++
+    ) {
       npv +=
         annualSavings /
-        Math.pow(1 + discount, year);
+        Math.pow(
+          1 + discountRate,
+          year
+        );
     }
+
+    /*
+     * IRR
+     */
 
     let irr = 0;
 
@@ -240,17 +335,24 @@ export default function ValueIntelligencePage() {
     ) {
       irr =
         Math.pow(
-          annualSavings /
-            investment,
-          1 / years
+          annualSavings / investment,
+          1 / investmentHorizon
         ) - 1;
     }
 
+    /*
+     * CARBON
+     */
+
     const energyConsumption =
-      Number(form.annualEnergyConsumption) || 0;
+      Number(
+        form.annualEnergyConsumption
+      ) || 0;
 
     const emissionFactor =
-      Number(form.carbonEmissionFactor) || 0;
+      Number(
+        form.carbonEmissionFactor
+      ) || 0;
 
     const carbonReduction =
       energyConsumption > 0 &&
@@ -260,7 +362,11 @@ export default function ValueIntelligencePage() {
           emissionFactor
         : 0;
 
-    const fields = [
+    /*
+     * DATA COMPLETENESS
+     */
+
+    const quantitativeFields = [
       form.portfolioArea,
       form.numberOfProperties,
       form.annualEnergyCost,
@@ -277,14 +383,225 @@ export default function ValueIntelligencePage() {
       form.carbonEmissionFactor,
     ];
 
-    const completed =
-      fields.filter(
-        (field) => field !== ""
+    const completedFields =
+      quantitativeFields.filter(
+        (value) => value !== ""
       ).length;
 
-    const dataCompleteness = Math.round(
-      (completed / fields.length) * 100
+    const dataCompleteness =
+      Math.round(
+        (completedFields /
+          quantitativeFields.length) *
+          100
+      );
+
+    /*
+     * VALUE SCORE
+     */
+
+    let valueScore = 50;
+
+    if (roi >= 30) {
+      valueScore += 20;
+    } else if (roi >= 20) {
+      valueScore += 15;
+    } else if (roi >= 10) {
+      valueScore += 10;
+    }
+
+    if (
+      payback > 0 &&
+      payback <= 3
+    ) {
+      valueScore += 15;
+    } else if (
+      payback > 0 &&
+      payback <= 5
+    ) {
+      valueScore += 10;
+    } else if (
+      payback > 0 &&
+      payback <= 7
+    ) {
+      valueScore += 5;
+    }
+
+    if (occupancy >= 90) {
+      valueScore += 10;
+    } else if (occupancy >= 80) {
+      valueScore += 5;
+    }
+
+    valueScore = Math.max(
+      0,
+      Math.min(
+        100,
+        Math.round(valueScore)
+      )
     );
+
+    /*
+     * RISK
+     */
+
+    let riskScore = 40;
+
+    if (
+      occupancy > 0 &&
+      occupancy < 85
+    ) {
+      riskScore += 30;
+    } else if (
+      occupancy > 0 &&
+      occupancy < 90
+    ) {
+      riskScore += 15;
+    }
+
+    if (
+      investment > 0 &&
+      roi < 10
+    ) {
+      riskScore += 20;
+    } else if (
+      investment > 0 &&
+      roi < 20
+    ) {
+      riskScore += 10;
+    }
+
+    riskScore = Math.max(
+      0,
+      Math.min(
+        100,
+        Math.round(riskScore)
+      )
+    );
+
+    const riskCategory =
+      riskScore >= 70
+        ? "Elevated"
+        : riskScore >= 40
+        ? "Moderate"
+        : "Managed";
+
+    /*
+     * FINANCING
+     */
+
+    let capitalReadiness =
+      50;
+
+    if (valueScore >= 80) {
+      capitalReadiness += 30;
+    } else if (
+      valueScore >= 60
+    ) {
+      capitalReadiness += 20;
+    } else {
+      capitalReadiness += 10;
+    }
+
+    capitalReadiness = Math.max(
+      0,
+      Math.min(
+        100,
+        Math.round(
+          capitalReadiness
+        )
+      )
+    );
+
+    const financingReadiness =
+      Math.max(
+        0,
+        Math.min(
+          100,
+          Math.round(
+            capitalReadiness *
+              0.4 +
+              Math.min(roi, 25) *
+                2 +
+              Math.max(
+                0,
+                10 - payback
+              ) *
+                3
+          )
+        )
+      );
+
+    const financingCategory =
+      financingReadiness >= 80
+        ? "Institutional Ready"
+        : financingReadiness >= 60
+        ? "Financing Ready"
+        : financingReadiness >= 40
+        ? "Developing"
+        : "Early Stage";
+
+    const financingStructures: string[] =
+      [];
+
+    if (roi >= 15) {
+      financingStructures.push(
+        "Sustainability-Linked Loan"
+      );
+    }
+
+    if (carbonReduction >= 50) {
+      financingStructures.push(
+        "Green Retrofit Financing"
+      );
+    }
+
+    if (
+      assetValueIncrease >=
+      1000000
+    ) {
+      financingStructures.push(
+        "Institutional ESG Capital"
+      );
+    }
+
+    if (
+      financingStructures.length ===
+      0
+    ) {
+      financingStructures.push(
+        "Commercial Real Estate Loan Optimization"
+      );
+
+      financingStructures.push(
+        "Energy Efficiency Incentive Programs"
+      );
+
+      financingStructures.push(
+        "Utility Rebate Financing"
+      );
+    }
+
+    /*
+     * SENSITIVITY
+     */
+
+    const conservativeSavings =
+      annualSavings * 0.75;
+
+    const upsideSavings =
+      annualSavings * 1.15;
+
+    const conservativeValue =
+      capRate > 0
+        ? conservativeSavings /
+          capRate
+        : 0;
+
+    const upsideValue =
+      capRate > 0
+        ? upsideSavings /
+          capRate
+        : 0;
 
     return {
       energySavings,
@@ -300,23 +617,40 @@ export default function ValueIntelligencePage() {
       irr,
       carbonReduction,
       dataCompleteness,
-      occupancy,
+      valueScore,
+      riskScore,
+      riskCategory,
+      capitalReadiness,
+      financingReadiness,
+      financingCategory,
+      financingStructures,
+      conservativeSavings,
+      upsideSavings,
+      conservativeValue,
+      upsideValue,
     };
   }, [form]);
 
+  /*
+   * SUBMIT
+   */
+
   async function handleSubmit(
-    e: React.FormEvent
+    event: React.FormEvent
   ) {
-    e.preventDefault();
+    event.preventDefault();
+
     setIsSubmitting(true);
 
     try {
-      const payload = new FormData();
+      const payload =
+        new FormData();
 
       payload.append(
         "_subject",
         `OXY Value Intelligence — ${
-          client?.company || "Real Estate Client"
+          client?.company ||
+          "Real Estate Client"
         }`
       );
 
@@ -330,9 +664,10 @@ export default function ValueIntelligencePage() {
         "table"
       );
 
-      // =========================================
-      // CARRIED FORWARD FROM PRELIMINARY
-      // =========================================
+      /*
+       * PRELIMINARY ASSESSMENT
+       * INFORMATION — CARRIED FORWARD
+       */
 
       payload.append(
         "Client Name",
@@ -376,7 +711,8 @@ export default function ValueIntelligencePage() {
 
       payload.append(
         "Green Certification",
-        client?.greenCertification || ""
+        client?.greenCertification ||
+          ""
       );
 
       payload.append(
@@ -386,7 +722,8 @@ export default function ValueIntelligencePage() {
 
       payload.append(
         "Primary Objective",
-        client?.primaryObjective || ""
+        client?.primaryObjective ||
+          ""
       );
 
       payload.append(
@@ -399,9 +736,10 @@ export default function ValueIntelligencePage() {
         client?.timeline || ""
       );
 
-      // =========================================
-      // NEW VALUE INTELLIGENCE DATA
-      // =========================================
+      /*
+       * NEW VALUE INTELLIGENCE
+       * INFORMATION
+       */
 
       payload.append(
         "Currency",
@@ -488,53 +826,68 @@ export default function ValueIntelligencePage() {
         form.dataConfidence
       );
 
-      // =========================================
-      // CALCULATED OUTPUTS
-      // =========================================
+      /*
+       * CALCULATED OUTPUTS
+       */
 
       payload.append(
         "Modeled Annual Savings",
-        money(results.annualSavings)
+        formatMoney(
+          results.annualSavings
+        )
       );
 
       payload.append(
         "ROI",
-        `${results.roi.toFixed(1)}%`
+        `${results.roi.toFixed(
+          1
+        )}%`
       );
 
       payload.append(
         "Payback",
-        `${results.payback.toFixed(1)} years`
+        `${results.payback.toFixed(
+          1
+        )} years`
       );
 
       payload.append(
         "Incremental NOI",
-        money(results.incrementalNOI)
+        formatMoney(
+          results.incrementalNOI
+        )
       );
 
       payload.append(
         "Improved NOI",
-        money(results.improvedNOI)
+        formatMoney(
+          results.improvedNOI
+        )
       );
 
       payload.append(
         "Indicative Asset Value Increase",
-        money(results.assetValueIncrease)
+        formatMoney(
+          results.assetValueIncrease
+        )
       );
 
       payload.append(
         "NPV",
-        money(results.npv)
+        formatMoney(results.npv)
       );
 
       payload.append(
         "IRR",
-        `${(results.irr * 100).toFixed(1)}%`
+        `${(
+          results.irr * 100
+        ).toFixed(1)}%`
       );
 
       payload.append(
         "Carbon Reduction",
-        results.carbonReduction > 0
+        results.carbonReduction >
+          0
           ? `${results.carbonReduction.toFixed(
               1
             )} tCO₂e/year`
@@ -542,8 +895,23 @@ export default function ValueIntelligencePage() {
       );
 
       payload.append(
+        "OXY Value Score",
+        `${results.valueScore}/100`
+      );
+
+      payload.append(
         "Data Completeness",
         `${results.dataCompleteness}%`
+      );
+
+      payload.append(
+        "Risk Category",
+        results.riskCategory
+      );
+
+      payload.append(
+        "Financing Readiness",
+        results.financingCategory
       );
 
       payload.append(
@@ -575,6 +943,10 @@ export default function ValueIntelligencePage() {
     }
   }
 
+  /*
+   * PRIVATE ACCESS GATE
+   */
+
   if (!authorized) {
     return (
       <main className="min-h-screen bg-[#ECFDF5] px-6 py-24">
@@ -590,15 +962,30 @@ export default function ValueIntelligencePage() {
 
             <p className="mt-4 text-center text-[#53645D]">
               Login required to access this
-              proprietary financial intelligence
-              platform.
+              proprietary financial
+              intelligence platform.
             </p>
+
+            {client?.company && (
+              <div className="mt-8 rounded-2xl bg-[#ECFDF5] p-5 text-center">
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#3D6B4F]">
+                  Preliminary Assessment
+                  Completed
+                </p>
+
+                <p className="mt-2 font-semibold text-[#10251E]">
+                  {client.company}
+                </p>
+              </div>
+            )}
 
             <input
               type="text"
               value={username}
-              onChange={(e) =>
-                setUsername(e.target.value)
+              onChange={(event) =>
+                setUsername(
+                  event.target.value
+                )
               }
               placeholder="Username"
               className="mt-8 w-full rounded-xl border border-[#10251E]/15 p-4"
@@ -612,8 +999,10 @@ export default function ValueIntelligencePage() {
                     : "password"
                 }
                 value={password}
-                onChange={(e) =>
-                  setPassword(e.target.value)
+                onChange={(event) =>
+                  setPassword(
+                    event.target.value
+                  )
                 }
                 placeholder="Password"
                 className="w-full rounded-xl border border-[#10251E]/15 p-4 pr-16"
@@ -643,6 +1032,25 @@ export default function ValueIntelligencePage() {
                   password ===
                     ADMIN_PASSWORD
                 ) {
+                  /*
+                   * Successful founder login is
+                   * remembered on this browser.
+                   *
+                   * This allows the founder to
+                   * return directly to Value
+                   * Intelligence without repeating
+                   * Preliminary Assessment.
+                   */
+
+                  localStorage.setItem(
+                    FOUNDER_ACCESS_KEY,
+                    "true"
+                  );
+
+                  setIsFounderAccess(
+                    true
+                  );
+
                   setAuthorized(true);
                 } else {
                   alert(
@@ -654,11 +1062,19 @@ export default function ValueIntelligencePage() {
             >
               Login
             </button>
+
+            <p className="mt-6 text-center text-xs leading-6 text-[#53645D]">
+              Authorized OXY access only.
+            </p>
           </div>
         </section>
       </main>
     );
   }
+
+  /*
+   * REPORT
+   */
 
   if (submitted) {
     return (
@@ -670,7 +1086,8 @@ export default function ValueIntelligencePage() {
             </p>
 
             <h1 className="mt-5 text-4xl font-bold md:text-6xl">
-              Financial Intelligence Report
+              Financial Intelligence
+              Report
             </h1>
 
             {client?.company && (
@@ -685,7 +1102,7 @@ export default function ValueIntelligencePage() {
             <div className="mt-10 grid gap-6 md:grid-cols-3">
               <Metric
                 label="Annual Savings"
-                value={money(
+                value={formatMoney(
                   results.annualSavings
                 )}
               />
@@ -706,21 +1123,21 @@ export default function ValueIntelligencePage() {
 
               <Metric
                 label="Incremental NOI"
-                value={money(
+                value={formatMoney(
                   results.incrementalNOI
                 )}
               />
 
               <Metric
                 label="Asset Value Impact"
-                value={money(
+                value={formatMoney(
                   results.assetValueIncrease
                 )}
               />
 
               <Metric
                 label="NPV"
-                value={money(
+                value={formatMoney(
                   results.npv
                 )}
               />
@@ -731,20 +1148,22 @@ export default function ValueIntelligencePage() {
                 Executive View
               </h2>
 
-              <p className="mt-4 text-lg leading-8 text-[#53645D]">
-                Based on the quantitative data
-                provided, the portfolio has a
-                modeled annual operating savings
+              <p className="mt-4 max-w-4xl text-lg leading-8 text-[#53645D]">
+                Based on the quantitative
+                information provided, the
+                portfolio has a modeled
+                annual operating savings
                 opportunity of{" "}
                 <strong>
-                  {money(
+                  {formatMoney(
                     results.annualSavings
                   )}
                 </strong>
-                . This translates into a modeled
-                incremental NOI contribution of{" "}
+                . This creates a modeled
+                incremental NOI contribution
+                of{" "}
                 <strong>
-                  {money(
+                  {formatMoney(
                     results.incrementalNOI
                   )}
                 </strong>
@@ -760,32 +1179,119 @@ export default function ValueIntelligencePage() {
               <div className="mt-6 grid gap-4 md:grid-cols-4">
                 <Bridge
                   title="Operating Efficiency"
-                  value={money(
+                  value={formatMoney(
                     results.annualSavings
                   )}
                 />
 
                 <Bridge
                   title="Annual Savings"
-                  value={money(
+                  value={formatMoney(
                     results.annualSavings
                   )}
                 />
 
                 <Bridge
                   title="NOI Improvement"
-                  value={money(
+                  value={formatMoney(
                     results.incrementalNOI
                   )}
                 />
 
                 <Bridge
                   title="Indicative Value Impact"
-                  value={money(
+                  value={formatMoney(
                     results.assetValueIncrease
                   )}
                 />
               </div>
+            </section>
+
+            <section className="mt-12">
+              <h2 className="text-3xl font-bold">
+                Scenario Analysis
+              </h2>
+
+              <div className="mt-6 grid gap-6 md:grid-cols-3">
+                <Metric
+                  label="Conservative"
+                  value={formatMoney(
+                    results.conservativeSavings
+                  )}
+                />
+
+                <Metric
+                  label="Base"
+                  value={formatMoney(
+                    results.annualSavings
+                  )}
+                />
+
+                <Metric
+                  label="Upside"
+                  value={formatMoney(
+                    results.upsideSavings
+                  )}
+                />
+              </div>
+            </section>
+
+            <section className="mt-12">
+              <h2 className="text-3xl font-bold">
+                Carbon Intelligence
+              </h2>
+
+              <p className="mt-4 max-w-4xl text-lg leading-8 text-[#53645D]">
+                {results.carbonReduction >
+                0
+                  ? `The modeled energy opportunity corresponds to approximately ${results.carbonReduction.toFixed(
+                      1
+                    )} tCO₂e of annual emissions reduction.`
+                  : "Carbon reduction has not been quantified because both annual energy consumption and an emission factor were not provided."}
+              </p>
+            </section>
+
+            <section className="mt-12">
+              <h2 className="text-3xl font-bold">
+                Risk Intelligence
+              </h2>
+
+              <p className="mt-4 max-w-4xl text-lg leading-8 text-[#53645D]">
+                Current modeled risk exposure is{" "}
+                <strong>
+                  {results.riskCategory}
+                </strong>
+                . This is an OXY
+                decision-support indicator,
+                not an external risk rating.
+              </p>
+            </section>
+
+            <section className="mt-12">
+              <h2 className="text-3xl font-bold">
+                Sustainable Finance
+              </h2>
+
+              <p className="mt-4 max-w-4xl text-lg leading-8 text-[#53645D]">
+                The modeled financing
+                readiness category is{" "}
+                <strong>
+                  {
+                    results.financingCategory
+                  }
+                </strong>
+                .
+              </p>
+
+              <ul className="mt-5 space-y-2 text-[#53645D]">
+                {results.financingStructures.map(
+                  (structure) => (
+                    <li key={structure}>
+                      • {structure}
+                    </li>
+                  )
+                )}
+              </ul>
             </section>
 
             <section className="mt-12 rounded-[2rem] bg-[#ECFDF5] p-8">
@@ -795,24 +1301,22 @@ export default function ValueIntelligencePage() {
 
               <ul className="mt-5 space-y-3 leading-8 text-[#53645D]">
                 <li>
-                  • Energy savings use the selected
-                  OXY planning scenario.
-                </li>
-
-                <li>
-                  • Water savings use the selected
-                  OXY planning scenario.
-                </li>
-
-                <li>
-                  • Maintenance savings use the
+                  • Energy, water and
+                  maintenance savings use the
                   selected OXY planning scenario.
                 </li>
 
                 <li>
-                  • Asset value impact is calculated
-                  from incremental NOI divided by
-                  the provided cap rate.
+                  • Scenario percentages are
+                  internal OXY planning
+                  assumptions and are not
+                  guarantees.
+                </li>
+
+                <li>
+                  • Asset value impact is
+                  incremental NOI divided by the
+                  provided capitalization rate.
                 </li>
 
                 <li>
@@ -821,17 +1325,70 @@ export default function ValueIntelligencePage() {
                 </li>
 
                 <li>
-                  • Carbon is only quantified when
-                  energy consumption and an emission
-                  factor are supplied.
+                  • Carbon is quantified only when
+                  energy consumption and an
+                  emission factor are available.
                 </li>
 
                 <li>
-                  • Results are modeled estimates,
-                  not guarantees or independent
-                  valuation opinions.
+                  • Final savings and valuation
+                  outcomes require asset-level
+                  validation.
                 </li>
               </ul>
+            </section>
+
+            <section className="mt-12">
+              <h2 className="text-2xl font-bold">
+                Methodology Sources
+              </h2>
+
+              <div className="mt-5 space-y-3 text-[#53645D]">
+                <a
+                  href={
+                    SOURCES.dewaHandbook
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block underline"
+                >
+                  DEWA Energy Conservation
+                  Handbook 2025
+                </a>
+
+                <a
+                  href={SOURCES.dewaDSM}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block underline"
+                >
+                  DEWA Demand Side
+                  Management Strategy 2050
+                </a>
+
+                <a
+                  href={SOURCES.rics}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block underline"
+                >
+                  RICS — ESG and
+                  Sustainability in Commercial
+                  Property Valuation
+                </a>
+
+                <a
+                  href={
+                    SOURCES.energyStar
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block underline"
+                >
+                  ENERGY STAR — Energy Use
+                  Intensity
+                </a>
+              </div>
             </section>
 
             <section className="mt-12 rounded-[2rem] bg-[#10251E] p-10 text-center text-white">
@@ -840,20 +1397,22 @@ export default function ValueIntelligencePage() {
               </p>
 
               <h2 className="mt-4 text-3xl font-bold">
-                OXY Implementation Intelligence™
+                OXY Implementation
+                Intelligence™
               </h2>
 
               <p className="mx-auto mt-4 max-w-3xl text-lg leading-8 text-white/80">
-                Translate the quantified financial
-                opportunity into an implementation
-                roadmap.
+                Translate the quantified
+                financial opportunity into an
+                implementation roadmap.
               </p>
 
               <a
                 href="/assessments/real-estate/implementation-intelligence"
                 className="mt-8 inline-block rounded-full bg-white px-8 py-4 font-semibold text-[#10251E]"
               >
-                Continue to Implementation Intelligence
+                Continue to Implementation
+                Intelligence
               </a>
             </section>
           </div>
@@ -861,6 +1420,10 @@ export default function ValueIntelligencePage() {
       </main>
     );
   }
+
+  /*
+   * VALUE INTELLIGENCE FORM
+   */
 
   return (
     <main className="min-h-screen bg-[#ECFDF5] px-6 py-24 text-[#10251E] md:px-16">
@@ -871,21 +1434,24 @@ export default function ValueIntelligencePage() {
           </p>
 
           <h1 className="mx-auto mt-5 max-w-5xl text-5xl font-bold leading-tight md:text-7xl">
-            Quantify the Financial Value
+            Quantify the Financial
+            Value
           </h1>
 
           <p className="mx-auto mt-6 max-w-4xl text-xl leading-9 text-[#53645D]">
-            Your Preliminary Assessment identified
-            the opportunity. This stage collects only
-            the additional quantitative information
-            required to calculate financial value.
+            Your Preliminary Assessment
+            identified the opportunity. This
+            stage collects only the additional
+            quantitative information required
+            to calculate financial value.
           </p>
         </div>
 
-        {client && (
+        {client?.company && (
           <div className="mx-auto mt-10 max-w-5xl rounded-2xl bg-white px-6 py-5 text-center shadow-sm">
             <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#3D6B4F]">
-              Preliminary Assessment Connected
+              Preliminary Assessment
+              Connected
             </p>
 
             <p className="mt-2 text-lg font-semibold">
@@ -898,6 +1464,25 @@ export default function ValueIntelligencePage() {
           </div>
         )}
 
+        {!client?.company &&
+          !isFounderAccess && (
+            <div className="mx-auto mt-10 max-w-5xl rounded-2xl border border-[#D7E9DF] bg-white px-6 py-5 text-center">
+              <p className="text-sm text-[#53645D]">
+                No Preliminary Assessment
+                information was found in this
+                browser session.
+              </p>
+
+              <a
+                href="/assessments/real-estate"
+                className="mt-3 inline-block font-semibold text-[#3D6B4F] underline"
+              >
+                Complete Preliminary
+                Assessment
+              </a>
+            </div>
+          )}
+
         <form
           onSubmit={handleSubmit}
           className="mt-8 rounded-[2rem] bg-white p-8 shadow-sm md:p-12"
@@ -907,50 +1492,58 @@ export default function ValueIntelligencePage() {
             title="Portfolio Quantification"
             description="New quantitative information only."
           >
-            <Select
+            <SelectField
               label="Currency"
               value={form.currency}
-              onChange={(v) =>
+              onChange={(value) =>
                 updateField(
                   "currency",
-                  v as "AED" | "USD"
+                  value as
+                    | "AED"
+                    | "USD"
                 )
               }
-              options={["AED", "USD"]}
+              options={[
+                "AED",
+                "USD",
+              ]}
             />
 
-            <Number
+            <NumberField
               label="Total Portfolio Area"
-              value={form.portfolioArea}
-              onChange={(v) =>
+              value={
+                form.portfolioArea
+              }
+              onChange={(value) =>
                 updateField(
                   "portfolioArea",
-                  v
+                  value
                 )
               }
               placeholder="e.g. 250000"
               suffix="sq ft"
             />
 
-            <Number
+            <NumberField
               label="Number of Properties"
               value={
                 form.numberOfProperties
               }
-              onChange={(v) =>
+              onChange={(value) =>
                 updateField(
                   "numberOfProperties",
-                  v
+                  value
                 )
               }
               placeholder="e.g. 12"
             />
 
             <div className="rounded-2xl bg-[#ECFDF5] p-5 text-sm leading-7 text-[#53645D]">
-              Your property type and portfolio
-              size were already captured in the
-              Preliminary Assessment and are being
-              carried forward automatically.
+              Property type and portfolio
+              size were already captured in
+              the Preliminary Assessment and
+              are being carried forward
+              automatically.
             </div>
           </Section>
 
@@ -959,30 +1552,30 @@ export default function ValueIntelligencePage() {
             title="Energy Quantification"
             description="Actual annual energy data used for savings and carbon calculations."
           >
-            <Number
+            <NumberField
               label="Annual Energy Cost"
               value={
                 form.annualEnergyCost
               }
-              onChange={(v) =>
+              onChange={(value) =>
                 updateField(
                   "annualEnergyCost",
-                  v
+                  value
                 )
               }
               placeholder="e.g. 2500000"
               prefix={form.currency}
             />
 
-            <Number
+            <NumberField
               label="Annual Energy Consumption"
               value={
                 form.annualEnergyConsumption
               }
-              onChange={(v) =>
+              onChange={(value) =>
                 updateField(
                   "annualEnergyConsumption",
-                  v
+                  value
                 )
               }
               placeholder="e.g. 12500"
@@ -995,30 +1588,30 @@ export default function ValueIntelligencePage() {
             title="Water Quantification"
             description="Actual annual water data used to quantify the water opportunity."
           >
-            <Number
+            <NumberField
               label="Annual Water Cost"
               value={
                 form.annualWaterCost
               }
-              onChange={(v) =>
+              onChange={(value) =>
                 updateField(
                   "annualWaterCost",
-                  v
+                  value
                 )
               }
               placeholder="e.g. 800000"
               prefix={form.currency}
             />
 
-            <Number
+            <NumberField
               label="Annual Water Consumption"
               value={
                 form.annualWaterConsumption
               }
-              onChange={(v) =>
+              onChange={(value) =>
                 updateField(
                   "annualWaterConsumption",
-                  v
+                  value
                 )
               }
               placeholder="Optional"
@@ -1031,15 +1624,15 @@ export default function ValueIntelligencePage() {
             title="Maintenance Quantification"
             description="Annual maintenance expenditure used to model operational savings."
           >
-            <Number
+            <NumberField
               label="Annual Maintenance Cost"
               value={
                 form.annualMaintenanceCost
               }
-              onChange={(v) =>
+              onChange={(value) =>
                 updateField(
                   "annualMaintenanceCost",
-                  v
+                  value
                 )
               }
               placeholder="e.g. 1200000"
@@ -1052,41 +1645,45 @@ export default function ValueIntelligencePage() {
             title="Financial Value"
             description="Connect operational opportunities to NOI and asset value."
           >
-            <Number
+            <NumberField
               label="Current Annual NOI"
-              value={form.currentNOI}
-              onChange={(v) =>
+              value={
+                form.currentNOI
+              }
+              onChange={(value) =>
                 updateField(
                   "currentNOI",
-                  v
+                  value
                 )
               }
               placeholder="e.g. 15000000"
               prefix={form.currency}
             />
 
-            <Number
+            <NumberField
               label="Capitalization Rate"
-              value={form.capRate}
-              onChange={(v) =>
+              value={
+                form.capRate
+              }
+              onChange={(value) =>
                 updateField(
                   "capRate",
-                  v
+                  value
                 )
               }
               placeholder="e.g. 7"
               suffix="%"
             />
 
-            <Number
+            <NumberField
               label="Exact Current Occupancy Rate"
               value={
                 form.exactOccupancyRate
               }
-              onChange={(v) =>
+              onChange={(value) =>
                 updateField(
                   "exactOccupancyRate",
-                  v
+                  value
                 )
               }
               placeholder="e.g. 92"
@@ -1094,22 +1691,22 @@ export default function ValueIntelligencePage() {
             />
 
             <div className="rounded-2xl bg-[#ECFDF5] p-5 text-sm leading-7 text-[#53645D]">
-              Your Preliminary Assessment already
-              captured your occupancy category.
-              This field is only asking for the
-              actual percentage needed for financial
-              modelling.
+              The Preliminary Assessment
+              captured your occupancy
+              category. This field only asks
+              for the actual percentage
+              required for financial modelling.
             </div>
 
-            <Number
+            <NumberField
               label="Proposed ESG / Sustainability Investment"
               value={
                 form.esgInvestment
               }
-              onChange={(v) =>
+              onChange={(value) =>
                 updateField(
                   "esgInvestment",
-                  v
+                  value
                 )
               }
               placeholder="e.g. 3000000"
@@ -1122,45 +1719,45 @@ export default function ValueIntelligencePage() {
             title="Investment Modelling"
             description="Financial assumptions required for return analysis."
           >
-            <Number
+            <NumberField
               label="Investment Horizon"
               value={
                 form.investmentHorizon
               }
-              onChange={(v) =>
+              onChange={(value) =>
                 updateField(
                   "investmentHorizon",
-                  v
+                  value
                 )
               }
               placeholder="10"
               suffix="years"
             />
 
-            <Number
+            <NumberField
               label="Discount Rate"
               value={
                 form.discountRate
               }
-              onChange={(v) =>
+              onChange={(value) =>
                 updateField(
                   "discountRate",
-                  v
+                  value
                 )
               }
               placeholder="8"
               suffix="%"
             />
 
-            <Number
+            <NumberField
               label="Carbon Emission Factor"
               value={
                 form.carbonEmissionFactor
               }
-              onChange={(v) =>
+              onChange={(value) =>
                 updateField(
                   "carbonEmissionFactor",
-                  v
+                  value
                 )
               }
               placeholder="Optional"
@@ -1171,15 +1768,17 @@ export default function ValueIntelligencePage() {
           <Section
             number="07"
             title="Analysis Controls"
-            description="These control how OXY models the financial opportunity."
+            description="These controls determine how OXY models the financial opportunity."
           >
-            <Select
+            <SelectField
               label="Planning Scenario"
-              value={form.scenario}
-              onChange={(v) =>
+              value={
+                form.scenario
+              }
+              onChange={(value) =>
                 updateField(
                   "scenario",
-                  v as
+                  value as
                     | "Conservative"
                     | "Base"
                     | "Upside"
@@ -1192,15 +1791,15 @@ export default function ValueIntelligencePage() {
               ]}
             />
 
-            <Select
+            <SelectField
               label="Data Confidence"
               value={
                 form.dataConfidence
               }
-              onChange={(v) =>
+              onChange={(value) =>
                 updateField(
                   "dataConfidence",
-                  v as
+                  value as
                     | "Low"
                     | "Moderate"
                     | "High"
@@ -1220,30 +1819,30 @@ export default function ValueIntelligencePage() {
             </p>
 
             <div className="mt-6 grid gap-6 md:grid-cols-4">
-              <Preview
+              <PreviewMetric
                 label="Annual Savings"
-                value={money(
+                value={formatMoney(
                   results.annualSavings
                 )}
               />
 
-              <Preview
+              <PreviewMetric
                 label="ROI"
                 value={`${results.roi.toFixed(
                   1
                 )}%`}
               />
 
-              <Preview
+              <PreviewMetric
                 label="Payback"
                 value={`${results.payback.toFixed(
                   1
                 )} yrs`}
               />
 
-              <Preview
+              <PreviewMetric
                 label="Asset Value Impact"
-                value={money(
+                value={formatMoney(
                   results.assetValueIncrease
                 )}
               />
@@ -1256,14 +1855,15 @@ export default function ValueIntelligencePage() {
             </strong>{" "}
             OXY planning scenarios are internal
             analytical assumptions. They are not
-            guaranteed savings and should be validated
-            using asset-level operational data.
+            guaranteed savings and should be
+            validated using asset-level
+            operational data.
           </div>
 
           <button
             type="submit"
             disabled={isSubmitting}
-            className="mt-8 w-full rounded-full bg-[#10251E] px-8 py-5 text-lg font-semibold text-white disabled:opacity-50"
+            className="mt-8 w-full rounded-full bg-[#10251E] px-8 py-5 text-lg font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isSubmitting
               ? "Generating Intelligence Report..."
@@ -1274,6 +1874,10 @@ export default function ValueIntelligencePage() {
     </main>
   );
 }
+
+/*
+ * SECTION
+ */
 
 function Section({
   number,
@@ -1311,7 +1915,11 @@ function Section({
   );
 }
 
-function Number({
+/*
+ * NUMBER FIELD
+ */
+
+function NumberField({
   label,
   value,
   onChange,
@@ -1344,13 +1952,17 @@ function Number({
           min="0"
           step="any"
           value={value}
-          onChange={(e) =>
-            onChange(e.target.value)
+          onChange={(event) =>
+            onChange(
+              event.target.value
+            )
           }
           placeholder={placeholder}
-          className={`w-full rounded-2xl border border-[#10251E]/15 bg-[#F8FCFA] px-5 py-4 ${
+          className={`w-full rounded-2xl border border-[#10251E]/15 bg-[#F8FCFA] px-5 py-4 outline-none focus:border-[#3D6B4F] ${
             prefix ? "pl-14" : ""
-          } ${suffix ? "pr-20" : ""}`}
+          } ${
+            suffix ? "pr-20" : ""
+          }`}
         />
 
         {suffix && (
@@ -1363,7 +1975,11 @@ function Number({
   );
 }
 
-function Select({
+/*
+ * SELECT FIELD
+ */
+
+function SelectField({
   label,
   value,
   onChange,
@@ -1382,27 +1998,35 @@ function Select({
 
       <select
         value={value}
-        onChange={(e) =>
-          onChange(e.target.value)
+        onChange={(event) =>
+          onChange(
+            event.target.value
+          )
         }
-        className="mt-3 w-full rounded-2xl border border-[#10251E]/15 bg-[#F8FCFA] px-5 py-4"
+        className="mt-3 w-full rounded-2xl border border-[#10251E]/15 bg-[#F8FCFA] px-5 py-4 outline-none focus:border-[#3D6B4F]"
       >
         <option value="">
           Select...
         </option>
 
-        {options.map((option) => (
-          <option
-            key={option}
-            value={option}
-          >
-            {option}
-          </option>
-        ))}
+        {options.map(
+          (option) => (
+            <option
+              key={option}
+              value={option}
+            >
+              {option}
+            </option>
+          )
+        )}
       </select>
     </div>
   );
 }
+
+/*
+ * REPORT METRIC
+ */
 
 function Metric({
   label,
@@ -1424,6 +2048,10 @@ function Metric({
   );
 }
 
+/*
+ * VALUE BRIDGE
+ */
+
 function Bridge({
   title,
   value,
@@ -1444,7 +2072,11 @@ function Bridge({
   );
 }
 
-function Preview({
+/*
+ * LIVE PREVIEW
+ */
+
+function PreviewMetric({
   label,
   value,
 }: {
